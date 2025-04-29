@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+/* Initial state (hidden and moved down) */
+[appScrollAnimate] {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.7s ease-out;
+  }
+  
+  /* When the element is in view */
+  .animate-show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  

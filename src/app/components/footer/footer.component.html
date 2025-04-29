@@ -1,0 +1,28 @@
+<footer class="bg-gray-900 text-white py-8">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6">
+    
+    <!-- Left Side (Logo and Name) -->
+    <div class="flex items-center gap-4">
+      <div class="bg-purple-500 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">
+        {{ logoLetter }}
+      </div>
+      <span class="text-lg font-semibold">{{ portfolioName }}</span>
+    </div>
+
+    <!-- Center (Navigation Links) -->
+    <div class="flex flex-wrap justify-center gap-6 mt-6 md:mt-0 text-gray-400">
+      <a 
+        *ngFor="let link of navLinks" 
+        [href]="link.href" 
+        class="hover:text-white scroll-smooth">
+        {{ link.label }}
+      </a>
+    </div>
+
+    <!-- Right Side (Copyright) -->
+    <div class="mt-6 md:mt-0 text-gray-500 text-sm">
+      {{ copyrightText }}
+    </div>
+
+  </div>
+</footer>

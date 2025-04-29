@@ -1,0 +1,96 @@
+<div data-aos="fade-up">
+<div class="min-h-screen bg-gray-50 flex items-center justify-center p-8">
+    <div class="bg-white rounded-3xl shadow-2xl flex flex-col md:flex-row w-full max-w-6xl p-10">
+      
+      <!-- Left Side (Contact Info) -->
+      <div class="w-full md:w-1/2 pr-8">
+        <h2 class="text-3xl font-bold mb-6"><span class="text-purple-500">Contact</span> Me</h2>
+        <p class="text-gray-600 mb-6">
+          I'm always open to discussing new projects, collaboration opportunities, or freelance work. Whether you have a question, a job opportunity, or just want to connect, feel free to reach out.        </p>
+  
+        <div class="space-y-6 mb-8">
+          <!-- Address -->
+          <div class="flex items-center gap-4 bg-white p-4 rounded-lg shadow-md">
+            <div class="bg-purple-500 text-white p-2 rounded-full">
+              <i class="fas fa-map-marker-alt"></i>
+            </div>
+            <div>
+              <p class="font-semibold">Address:</p>
+              <p>IT Park Mandian Abbottabad</p>
+            </div>
+          </div>
+  
+          <!-- Email -->
+          <div class="flex items-center ml-3 gap-4">
+            <div class="bg-purple-500 text-white p-2 rounded-full">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div>
+              <p class="font-semibold">My Email:</p>
+              <p>areebakhalid9854&#64;gmail.com</p>
+            </div>
+          </div>
+  
+          <!-- Phone -->
+          <div class="flex items-center  ml-3 gap-4">
+            <div class="bg-purple-500 text-white p-2 rounded-full">
+              <i class="fas fa-phone-alt"></i>
+            </div>
+            <div>
+              <p class="font-semibold">Call Me Now:</p>
+              <p>09999999999</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Social Links -->
+        <div class="flex space-x-4 ml-5 text-purple-500">
+          <a href="#" class="hover:text-purple-700"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="hover:text-purple-700"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="hover:text-purple-700"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+  
+   <!-- Right Side (Form) -->
+<div class="w-full md:w-1/2 mt-10 md:mt-0">
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    
+    <!-- Loop through form fields -->
+    <div *ngFor="let field of formFields">
+      <label class="block text-sm font-semibold text-gray-700 mb-1">
+        {{ field.label }}
+      </label>
+
+      <ng-container [ngSwitch]="field.type">
+        <!-- Input Field -->
+        <input *ngSwitchCase="'text'" [formControlName]="field.name" [placeholder]="field.placeholder"
+               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+
+        <!-- Email Field -->
+        <input *ngSwitchCase="'email'" [formControlName]="field.name" [placeholder]="field.placeholder"
+               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+
+        <!-- Textarea Field -->
+        <textarea *ngSwitchCase="'textarea'" [formControlName]="field.name" [placeholder]="field.placeholder"
+                  rows="4"
+                  class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+      </ng-container>
+
+      <!-- Validation Error -->
+      <div *ngIf="contactForm.get(field.name)?.invalid && contactForm.get(field.name)?.touched" class="text-red-500 text-sm mt-1">
+        {{ field.label }} is required
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit"
+            class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition w-full">
+      Send Message
+    </button>
+  </form>
+</div>
+
+    </div>
+  </div>
+</div>
+  
