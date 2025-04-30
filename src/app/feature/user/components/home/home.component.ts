@@ -1,6 +1,5 @@
 import { Component, ContentChild } from '@angular/core';
 import { SkillsComponent } from "../skills/skills.component";
-import { NavbarComponent } from '../navbar/navbar.component';
 import { HeroComponent } from '../hero/hero.component';
 import { ExperienceComponent } from '../experience/experience.component';
 import { ContactComponent } from '../contact/contact.component';

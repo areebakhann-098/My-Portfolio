@@ -1,49 +1,101 @@
 import { Routes } from '@angular/router';
-import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
+import { UserLayoutComponent } from './layouts/user-layout/user-layout.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { HeroComponent } from './feature/admin/hero/hero.component';
+import { AboutComponent } from './feature/admin/about/about.component';
+import { ProjectsComponent } from './feature/admin/projects/projects.component';
+import { SkillsComponent } from './feature/admin/skills/skills.component';
+import { ExperienceComponent } from './feature/admin/experience/experience.component';
+import { ServicesComponent } from './feature/admin/services/services.component';
+import { ProfileComponent } from './feature/admin/profile/profile.component';
+import { ContactComponent } from './feature/admin/contact/contact.component';
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./components/home/home.component').then(m => m.HomeComponent),
+    component: UserLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./feature/user/components/home/home.component').then(m => m.HomeComponent),
+      },
+      {
+        path: 'about',
+        loadComponent: () =>
+          import('./feature/user/components/about/about.component').then(m => m.AboutComponent),
+      },
+      {
+        path: 'services',
+        loadComponent: () =>
+          import('./feature/user/components/services/services.component').then(m => m.ServicesComponent),
+      },
+      {
+        path: 'projects',
+        loadComponent: () =>
+          import('./feature/user/components/projects/projects.component').then(m => m.ProjectsComponent),
+      },
+      {
+        path: 'skills',
+        loadComponent: () =>
+          import('./feature/user/components/skills/skills.component').then(m => m.SkillsComponent),
+      },
+      {
+        path: 'experience',
+        loadComponent: () =>
+          import('./feature/user/components/experience/experience.component').then(m => m.ExperienceComponent),
+      },
+      {
+        path: 'contact',
+        loadComponent: () =>
+          import('./feature/user/components/contact/contact.component').then(m => m.ContactComponent),
+      },
+      {
+        path: 'project-detail/:id',
+        loadComponent: () =>
+          import('./feature/user/components/project-detail/project-detail.component').then(m => m.ProjectDetailComponent),
+      },
+    ]
   },
-  {
-    path: 'about',
-    loadComponent: () =>
-      import('./components/about/about.component').then(m => m.AboutComponent),
-  },
-  {
-    path: 'services',
-    loadComponent: () =>
-      import('./components/services/services.component').then(m => m.ServicesComponent),
-  },
-  {
-    path: 'projects',
-    loadComponent: () =>
-      import('./components/projects/projects.component').then(m => m.ProjectsComponent),
-  },
-  {
-    path: 'skills',
-    loadComponent: () =>
-      import('./components/skills/skills.component').then(m => m.SkillsComponent),
-  },
-  {
-    path: 'experience',
-    loadComponent: () =>
-      import('./components/experience/experience.component').then(m => m.ExperienceComponent),
-  },
-  {
-    path: 'contact',
-    loadComponent: () =>
-      import('./components/contact/contact.component').then(m => m.ContactComponent),
-  },
-  {
-    path: 'project-detail/:id',
-    loadComponent: () => import('./components/project-detail/project-detail.component').then(m => m.ProjectDetailComponent)
-  },
-  
 
-  
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    children: [
+      {
+        path:'hero',
+        component:HeroComponent
+      },
+      {
+        path: 'about',
+        component: AboutComponent
+      },
+      {
+        path: 'projects',
+        component: ProjectsComponent
+      },
+      {
+        path: 'skills',
+        component: SkillsComponent
+      },
+      {
+        path: 'experience',
+        component: ExperienceComponent
+      },
+      {
+        path: 'services',
+        component: ServicesComponent
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent
+      },
+      {
+        path: 'contact',
+        component: ContactComponent
+      }
+    ]
+  },
 
   {
     path: '**',

@@ -1,0 +1,63 @@
+<section class="p-8 bg-gray-50 min-h-screen">
+    <h1 class="text-4xl font-bold text-center mb-6">Experience Section</h1>
+  
+    <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
+      <form [formGroup]="experienceForm" (ngSubmit)="submitExperienceForm()">
+        
+        <!-- Title -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Title</mat-label>
+          <input matInput placeholder="Enter experience title..." formControlName="title" />
+        </mat-form-field>
+  
+        <!-- Description -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            rows="4"
+            placeholder="Describe your role..."
+          ></textarea>
+        </mat-form-field>
+  
+        <!-- From Date -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>From</mat-label>
+          <input matInput [matDatepicker]="fromPicker" formControlName="fromDate" />
+          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker></mat-datepicker>
+        </mat-form-field>
+  
+        <!-- To Date -->
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>To</mat-label>
+          <input matInput [matDatepicker]="toPicker" formControlName="toDate" />
+          <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+          <mat-datepicker #toPicker></mat-datepicker>
+        </mat-form-field>
+  
+        <!-- Image Upload -->
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">Upload Image</label>
+          <input
+            type="file"
+            (change)="onImageSelected($event)"
+            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+            file:rounded-full file:border-0
+            file:text-sm file:font-semibold
+            file:bg-yellow-50 file:text-yellow-700
+            hover:file:bg-yellow-100"
+          />
+        </div>
+  
+        <!-- Submit Button -->
+        <div class="text-right mt-4">
+          <button mat-raised-button color="primary" type="submit">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+  

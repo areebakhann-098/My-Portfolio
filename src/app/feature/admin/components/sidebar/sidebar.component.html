@@ -1,0 +1,20 @@
+
+   <aside class="w-64 bg-white shadow-lg p-6 fixed h-full">
+    <div class="flex items-center gap-3 mb-10">
+      <img [src]="userLogo" alt="Logo" class="rounded-full w-10 h-10" />
+      <h2 class="text-lg font-bold">{{ userName }}</h2>
+    </div>
+  
+    <nav class="flex flex-col gap-4 text-gray-700 font-medium">
+      <a
+        *ngFor="let link of links"
+        [routerLink]="link.path"
+        class="hover:text-blue-600"
+      >
+      <mat-icon class="mr-4">{{ link.icon }}</mat-icon>
+
+        {{ link.label }}
+      </a>
+    </nav>
+  </aside>
+  

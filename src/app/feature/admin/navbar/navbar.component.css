@@ -1,0 +1,39 @@
+.admin-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    padding: 0 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+  }
+  
+  .page-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .user-name {
+    color: #2c3e50;
+    font-weight: 500;
+  }
+  
+  .user-avatar {
+    width: 35px;
+    height: 35px;
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    padding: 6px;
+  }
+  

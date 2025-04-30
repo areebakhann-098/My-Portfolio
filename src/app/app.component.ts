@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { FooterComponent } from './components/footer/footer.component';
-import AOS from 'aos'
-import { NavbarComponent } from './components/navbar/navbar.component';
+import { RouterOutlet } from '@angular/router'; 
+import AOS from 'aos' 
+
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NavbarComponent, RouterOutlet, FooterComponent],
+  imports: [ RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
