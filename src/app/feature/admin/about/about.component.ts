@@ -25,6 +25,11 @@ export class AboutComponent {
     description: new FormControl('', Validators.required),
     cv: new FormControl<File | null>(null),
     photo: new FormControl<File | null>(null),
+    facebook: new FormControl(''),
+    instagram: new FormControl(''),
+    github: new FormControl(''),
+    linkedin: new FormControl(''),
+    fiverr: new FormControl('')
   });
 
   onCVSelected(event: any) {

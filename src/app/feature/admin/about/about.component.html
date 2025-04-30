@@ -1,73 +1,98 @@
 <section class="p-8 bg-gray-50 min-h-screen">
-    <!-- Title -->
-    <h1 class="text-4xl font-bold text-center mb-6">About Section</h1>
-  
-    <!-- Tabs -->
-    <mat-tab-group>
-      <!-- Add About Data Tab -->
-      <mat-tab label="Add About Info">
-        <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
-          <form [formGroup]="aboutForm" (ngSubmit)="submitAboutForm()">
-            
-            <!-- Title -->
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-label>Title</mat-label>
-              <input matInput placeholder="Enter title..." formControlName="title" />
-            </mat-form-field>
-  
-            <!-- Description -->
-            <mat-form-field appearance="fill" class="w-full">
-              <mat-label>Description</mat-label>
-              <textarea
-                matInput
-                formControlName="description"
-                rows="4"
-                placeholder="Enter a short description..."
-              ></textarea>
-            </mat-form-field>
-  
-            <!-- Upload CV -->
-            <div>
-              <label class="block text-gray-700 font-semibold mb-2">Upload CV</label>
-              <input
-                type="file"
-                (change)="onCVSelected($event)"
-                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-green-50 file:text-green-700
-                hover:file:bg-green-100"
-              />
-            </div>
-  
-            <!-- Upload Photo -->
-            <div>
-              <label class="block text-gray-700 font-semibold mb-2">Upload Photo</label>
-              <input
-                type="file"
-                (change)="onPhotoSelected($event)"
-                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-blue-50 file:text-blue-700
-                hover:file:bg-blue-100"
-              />
-            </div>
-  
-            <!-- Submit Button -->
-            <div class="text-right mt-4">
-              <button mat-raised-button color="primary" type="submit">
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
-      </mat-tab>
-  
-      <!-- See About Data Tab -->
-      <mat-tab label="See About Info">
-        <div class="mt-6 text-center text-gray-500">About info display section coming soon...</div>
-      </mat-tab>
-    </mat-tab-group>
-  </section>
-  
+  <!-- Title -->
+  <h1 class="text-4xl font-bold text-center mb-6">About Section</h1>
+
+  <!-- Tabs -->
+  <mat-tab-group>
+    <!-- Add About Data Tab -->
+    <mat-tab label="Add About Info">
+      <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
+        <form [formGroup]="aboutForm" (ngSubmit)="submitAboutForm()">
+          
+          <!-- Title -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Title</mat-label>
+            <input matInput placeholder="Enter title..." formControlName="title" />
+          </mat-form-field>
+
+          <!-- Description -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              formControlName="description"
+              rows="4"
+              placeholder="Enter a short description..."
+            ></textarea>
+          </mat-form-field>
+
+     
+          <!-- Social Media Links -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Facebook</mat-label>
+            <input matInput placeholder="Facebook profile link" formControlName="facebook" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Instagram</mat-label>
+            <input matInput placeholder="Instagram profile link" formControlName="instagram" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>GitHub</mat-label>
+            <input matInput placeholder="GitHub profile link" formControlName="github" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>LinkedIn</mat-label>
+            <input matInput placeholder="LinkedIn profile link" formControlName="linkedin" />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Fiverr</mat-label>
+            <input matInput placeholder="Fiverr profile link" formControlName="fiverr" />
+          </mat-form-field>
+     <!-- Upload CV -->
+     <div>
+      <label class="block text-gray-700 font-semibold mb-2">Upload CV</label>
+      <input
+        type="file"
+        (change)="onCVSelected($event)"
+        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+        file:rounded-full file:border-0
+        file:text-sm file:font-semibold
+        file:bg-green-50 file:text-green-700
+        hover:file:bg-green-100"
+      />
+    </div>
+
+    <!-- Upload Photo -->
+    <div>
+      <label class="block text-gray-700 font-semibold mb-2">Upload Photo</label>
+      <input
+        type="file"
+        (change)="onPhotoSelected($event)"
+        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+        file:rounded-full file:border-0
+        file:text-sm file:font-semibold
+        file:bg-blue-50 file:text-blue-700
+        hover:file:bg-blue-100"
+      />
+    </div>
+
+          <!-- Submit Button -->
+          <div class="text-right mt-4">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- See About Data Tab -->
+    <mat-tab label="See About Info">
+      <div class="mt-6 text-center text-gray-500">About info display section coming soon...</div>
+    </mat-tab>
+  </mat-tab-group>
+</section>
