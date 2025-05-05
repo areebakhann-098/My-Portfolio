@@ -1,53 +1,77 @@
 <section class="p-8 bg-gray-50 min-h-screen">
-    <h1 class="text-4xl font-bold text-center mb-6">Skills Section</h1>
-  
-    <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
-      <form [formGroup]="skillsForm" (ngSubmit)="submitSkillsForm()">
+  <h1 class="text-4xl font-bold text-center mb-6">Skills Section</h1>
+
+  <mat-tab-group>
+    <!-- Add Skills Info Tab -->
+    <mat-tab label="Add Skills Info">
+      <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
+        <form [formGroup]="skillsForm" (ngSubmit)="submitSkillsForm()">
+          
+          <!-- Skill Title -->
+          <!-- <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Skill Title</mat-label>
+            <input matInput placeholder="Enter skill title..." formControlName="title" />
+          </mat-form-field> -->
+
+          <!-- Description -->
+          <!-- <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              formControlName="description"
+              rows="4"
+              placeholder="Enter skill description..."
+            ></textarea>
+          </mat-form-field> -->
+            <!-- Image Title -->
+            <mat-form-field appearance="fill" class="w-full mt-4">
+              <mat-label>Image Title</mat-label>
+              <input matInput placeholder="Enter image title..." formControlName="imageTitle" />
+            </mat-form-field>
+
+          <!-- Image Upload -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Upload Image</label>
+            <input
+              type="file"
+              (change)="onImageSelected($event)"
+              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              file:bg-green-50 file:text-green-700
+              hover:file:bg-green-100"
+            />
+          </div>
+
+          <!-- Image Preview -->
+          <img *ngIf="previewImage" [src]="previewImage" class="w-32 h-32 object-cover mt-4 rounded" />
+
         
-        <!-- Title -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Skill Title</mat-label>
-          <input matInput placeholder="Enter skill title..." formControlName="title" />
-        </mat-form-field>
-  
-        <!-- Description -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Description</mat-label>
-          <textarea
-            matInput
-            formControlName="description"
-            rows="4"
-            placeholder="Enter skill description..."
-          ></textarea>
-        </mat-form-field>
-  
-        <!-- Image Upload -->
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2">Upload Image</label>
-          <input
-            type="file"
-            (change)="onImageSelected($event)"
-            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-            file:rounded-full file:border-0
-            file:text-sm file:font-semibold
-            file:bg-green-50 file:text-green-700
-            hover:file:bg-green-100"
-          />
+
+          <!-- Submit Button -->
+          <div class="text-right mt-4">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- See Skills Info Tab -->
+    <mat-tab label="See Skills Info">
+      <div *ngIf="skillsDataList.length === 0" class="mt-6 text-center text-gray-500">
+        No skills added yet...
+      </div>
+
+      <div *ngFor="let skill of skillsDataList" class="max-w-2xl mx-auto mt-6">
+        <div class="bg-white rounded-xl shadow-md p-4 space-y-2">
+          <img *ngIf="skill.imageUrl" [src]="skill.imageUrl" class="w-full h-48 object-cover rounded" />
+          <h2 class="text-xl font-bold">{{ skill.title }}</h2>
+          <p>{{ skill.description }}</p>
+          <p><strong>Image Title:</strong> {{ skill.imageTitle }}</p>
         </div>
-  
-        <!-- Image Title -->
-        <mat-form-field appearance="fill" class="w-full mt-4">
-          <mat-label>Image Title</mat-label>
-          <input matInput placeholder="Enter image title..." formControlName="imageTitle" />
-        </mat-form-field>
-  
-        <!-- Submit Button -->
-        <div class="text-right mt-4">
-          <button mat-raised-button color="primary" type="submit">
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
-  </section>
-  
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</section>

@@ -11,94 +11,57 @@ import { ProfileComponent } from './feature/admin/profile/profile.component';
 import { ContactComponent } from './feature/admin/contact/contact.component';
 
 export const routes: Routes = [
+  // User front-end
   {
     path: '',
     component: UserLayoutComponent,
     children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./feature/user/components/home/home.component').then(m => m.HomeComponent),
-      },
-      {
-        path: 'about',
-        loadComponent: () =>
-          import('./feature/user/components/about/about.component').then(m => m.AboutComponent),
-      },
-      {
-        path: 'services',
-        loadComponent: () =>
-          import('./feature/user/components/services/services.component').then(m => m.ServicesComponent),
-      },
-      {
-        path: 'projects',
-        loadComponent: () =>
-          import('./feature/user/components/projects/projects.component').then(m => m.ProjectsComponent),
-      },
-      {
-        path: 'skills',
-        loadComponent: () =>
-          import('./feature/user/components/skills/skills.component').then(m => m.SkillsComponent),
-      },
-      {
-        path: 'experience',
-        loadComponent: () =>
-          import('./feature/user/components/experience/experience.component').then(m => m.ExperienceComponent),
-      },
-      {
-        path: 'contact',
-        loadComponent: () =>
-          import('./feature/user/components/contact/contact.component').then(m => m.ContactComponent),
-      },
-      {
-        path: 'project-detail/:id',
-        loadComponent: () =>
-          import('./feature/user/components/project-detail/project-detail.component').then(m => m.ProjectDetailComponent),
-      },
+      { path: '', loadComponent: () => import('./feature/user/components/home/home.component').then(m => m.HomeComponent) },
+      { path: 'about', loadComponent: () => import('./feature/user/components/about/about.component').then(m => m.AboutComponent) },
+      { path: 'services', loadComponent: () => import('./feature/user/components/services/services.component').then(m => m.ServicesComponent) },
+      { path: 'projects', loadComponent: () => import('./feature/user/components/projects/projects.component').then(m => m.ProjectsComponent) },
+      { path: 'skills', loadComponent: () => import('./feature/user/components/skills/skills.component').then(m => m.SkillsComponent) },
+      { path: 'experience', loadComponent: () => import('./feature/user/components/experience/experience.component').then(m => m.ExperienceComponent) },
+      { path: 'contact', loadComponent: () => import('./feature/user/components/contact/contact.component').then(m => m.ContactComponent) },
+      { path: 'project-detail/:id', loadComponent: () => import('./feature/user/components/project-detail/project-detail.component').then(m => m.ProjectDetailComponent) },
     ]
   },
 
+  // Admin login (public)
+  // {
+  //   path: 'admin/login',
+  //   component: LoginComponent
+  // },
+
+  // Admin area (no guards for now)
   {
     path: 'admin',
     component: AdminLayoutComponent,
     children: [
-      {
-        path:'hero',
-        component:HeroComponent
-      },
-      {
-        path: 'about',
-        component: AboutComponent
-      },
-      {
-        path: 'projects',
-        component: ProjectsComponent
-      },
-      {
-        path: 'skills',
-        component: SkillsComponent
-      },
-      {
-        path: 'experience',
-        component: ExperienceComponent
-      },
-      {
-        path: 'services',
-        component: ServicesComponent
-      },
-      {
-        path: 'profile',
-        component: ProfileComponent
-      },
-      {
-        path: 'contact',
-        component: ContactComponent
-      }
+      { path: 'hero', component: HeroComponent },
+      { path: 'about', component: AboutComponent },
+      { path: 'projects', component: ProjectsComponent },
+      { path: 'skills', component: SkillsComponent },
+      { path: 'experience', component: ExperienceComponent },
+      { path: 'services', component: ServicesComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'contact', component: ContactComponent },
+
+      // Redirect bare /admin to hero (or any default dashboard page)
+      { path: '', redirectTo: '', pathMatch: 'full' }
     ]
   },
 
+  // Default redirect to admin login
+  {
+    path: '',
+    redirectTo: 'admin/login',
+    pathMatch: 'full'
+  },
+
+  // Wildcard
   {
     path: '**',
-    redirectTo: '',
-  },
+    redirectTo: 'admin/login'
+  }
 ];

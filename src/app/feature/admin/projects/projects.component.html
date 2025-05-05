@@ -1,69 +1,78 @@
 <section class="p-8 bg-gray-50 min-h-screen">
-    <!-- Title -->
-    <h1 class="text-4xl font-bold text-center mb-6">Project Section</h1>
-  
-    <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
-      <form [formGroup]="projectForm" (ngSubmit)="submitProjectForm()">
-  
-        <!-- Title -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Project Title</mat-label>
-          <input matInput placeholder="Enter project title..." formControlName="title" />
-        </mat-form-field>
-  
-        <!-- Category -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Category</mat-label>
-          <mat-select formControlName="category">
-            <mat-option *ngFor="let category of categoryOptions" [value]="category">
-              {{ category }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-  
-        <!-- Short Description -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Short Description</mat-label>
-          <textarea
-            matInput
-            formControlName="shortDescription"
-            rows="2"
-            placeholder="Enter a short description..."
-          ></textarea>
-        </mat-form-field>
-  
-        <!-- Full Description -->
-        <mat-form-field appearance="fill" class="w-full">
-          <mat-label>Full Description</mat-label>
-          <textarea
-            matInput
-            formControlName="fullDescription"
-            rows="5"
-            placeholder="Enter a detailed description..."
-          ></textarea>
-        </mat-form-field>
-  
-        <!-- Upload Image -->
-        <div>
-          <label class="block text-gray-700 font-semibold mb-2">Upload Project Image</label>
-          <input
-            type="file"
-            (change)="onImageSelected($event)"
-            class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-            file:rounded-full file:border-0
-            file:text-sm file:font-semibold
-            file:bg-purple-50 file:text-purple-700
-            hover:file:bg-purple-100"
-          />
+  <h1 class="text-4xl font-bold text-center mb-6">Project Section</h1>
+
+  <mat-tab-group>
+    <!-- Add Project Info Tab -->
+    <mat-tab label="Add Project Info">
+      <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
+        <form [formGroup]="projectForm" (ngSubmit)="submitProjectForm()">
+          <!-- Project Title -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Project Title</mat-label>
+            <input matInput placeholder="Enter project title..." formControlName="title" />
+          </mat-form-field>
+
+          <!-- Category -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+              <mat-option *ngFor="let category of categoryOptions" [value]="category">
+                {{ category }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Short Description -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Short Description</mat-label>
+            <textarea matInput formControlName="shortDescription" rows="2" placeholder="Enter a short description..."></textarea>
+          </mat-form-field>
+
+          <!-- Full Description -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Full Description</mat-label>
+            <textarea matInput formControlName="fullDescription" rows="5" placeholder="Enter a detailed description..."></textarea>
+          </mat-form-field>
+
+          <!-- Image Upload -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Upload Project Image</label>
+            <input
+              type="file"
+              (change)="onImageSelected($event)"
+              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              file:bg-purple-50 file:text-purple-700
+              hover:file:bg-purple-100"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-right mt-4">
+            <button mat-raised-button color="primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-tab>
+
+    <!-- See Project Info Tab -->
+    <mat-tab label="See Project Info">
+      <div *ngIf="projectList.length === 0" class="text-center mt-6 text-gray-500">
+        No projects added yet.
+      </div>
+
+      <div *ngFor="let project of projectList" class="max-w-2xl mx-auto mt-6">
+        <div class="bg-white rounded-xl shadow p-4">
+          <img *ngIf="project.imageUrl" [src]="project.imageUrl" alt="Project Image" class="w-full h-40 object-cover rounded" />
+          <h2 class="text-xl font-bold mt-2">{{ project.title }}</h2>
+          <p class="text-sm text-gray-600 mb-2"><strong>Category:</strong> {{ project.category }}</p>
+          <p class="text-md font-medium">{{ project.shortDescription }}</p>
+          <p class="text-sm text-gray-700 mt-2">{{ project.fullDescription }}</p>
         </div>
-  
-        <!-- Submit Button -->
-        <div class="text-right mt-4">
-          <button mat-raised-button color="primary" type="submit">
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
-  </section>
-  
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</section>

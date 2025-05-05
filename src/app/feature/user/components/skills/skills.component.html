@@ -6,10 +6,9 @@
     </p>
 
     <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
-      <!-- Loop through the skills array -->
-      <div *ngFor="let skill of skills" class="flex flex-col items-center transition-transform transform hover:scale-110 duration-300">
-        <img [src]="skill.image" [alt]="skill.name" class="w-15 h-15 object-contain mb-2" />
-        <p class="font-semibold">{{ skill.name }}</p>
+      <div *ngFor="let skill of skills()" class="flex flex-col items-center transition-transform transform hover:scale-110 duration-300">
+        <img [src]="skill.image" [alt]="skill.imageTitle || 'Skill'" class="w-15 h-15 object-contain mb-2" />
+        <p class="font-semibold">{{ skill.imageTitle }}</p>
       </div>
     </div>
   </section>

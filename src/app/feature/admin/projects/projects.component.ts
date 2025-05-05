@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-project',
@@ -18,6 +19,7 @@ import { MatOptionModule } from '@angular/material/core';
     MatFormFieldModule,
     MatSelectModule,
     MatOptionModule,
+    MatTabsModule
   ],
   templateUrl: './projects.component.html',
 })
@@ -32,17 +34,34 @@ export class ProjectsComponent {
     image: new FormControl<File | null>(null),
   });
 
+  projectList: any[] = [];
+  imagePreview: string | null = null;
+
   onImageSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
       this.projectForm.get('image')?.setValue(file);
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
     }
   }
 
   submitProjectForm() {
     if (this.projectForm.valid) {
-      console.log('Project submitted:', this.projectForm.value);
+      const newProject = {
+        ...this.projectForm.value,
+        imageUrl: this.imagePreview,
+      };
+
+      this.projectList.push(newProject);
+      console.log('Project added:', newProject);
+
       this.projectForm.reset();
+      this.imagePreview = null;
     }
   }
 }

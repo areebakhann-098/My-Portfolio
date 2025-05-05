@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-services',
@@ -11,9 +12,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatButtonModule,
-    MatInputModule,
     MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTabsModule
   ],
   templateUrl: './services.component.html',
 })
@@ -23,10 +25,17 @@ export class ServicesComponent {
     description: new FormControl('', Validators.required),
   });
 
+  servicesList: any[] = [];
+
   submitServicesForm() {
     if (this.servicesForm.valid) {
-      console.log('Service Submitted:', this.servicesForm.value);
+      const formValue = this.servicesForm.value;
+      this.servicesList.push({ ...formValue });
+
       this.servicesForm.reset();
+      alert('Service info added successfully!');
+    } else {
+      alert('Form is invalid!');
     }
   }
 }
