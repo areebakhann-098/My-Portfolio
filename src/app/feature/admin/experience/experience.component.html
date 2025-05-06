@@ -1,82 +1,74 @@
 <section class="p-8 bg-gray-50 min-h-screen">
   <h1 class="text-4xl font-bold text-center mb-6">Experience Section</h1>
 
-  <!-- Tabs -->
   <mat-tab-group>
-    <!-- Tab 1: Add Experience Info -->
+    <!-- Add Experience -->
     <mat-tab label="Add Experience Info">
-      <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
+      <div class="bg-white p-6 rounded-xl shadow-lg max-w-2xl mx-auto mt-6">
         <form [formGroup]="experienceForm" (ngSubmit)="submitExperienceForm()">
-          <!-- Title -->
-          <mat-form-field appearance="fill" class="w-full">
+          <mat-form-field appearance="fill" class="w-full mb-4">
             <mat-label>Title</mat-label>
-            <input matInput placeholder="Enter experience title..." formControlName="title" />
+            <input matInput formControlName="title" placeholder="Enter title..." />
           </mat-form-field>
 
-          <!-- Description -->
-          <mat-form-field appearance="fill" class="w-full">
+          <mat-form-field appearance="fill" class="w-full mb-4">
             <mat-label>Description</mat-label>
-            <textarea
-              matInput
-              formControlName="description"
-              rows="4"
-              placeholder="Describe your role..."
-            ></textarea>
+            <textarea matInput rows="3" formControlName="description"></textarea>
           </mat-form-field>
 
-          <!-- From Date -->
-          <mat-form-field appearance="fill" class="w-full">
+          <mat-form-field appearance="fill" class="w-full mb-4">
             <mat-label>From</mat-label>
             <input matInput [matDatepicker]="fromPicker" formControlName="fromDate" />
             <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
             <mat-datepicker #fromPicker></mat-datepicker>
           </mat-form-field>
 
-          <!-- To Date -->
-          <mat-form-field appearance="fill" class="w-full">
+          <mat-form-field appearance="fill" class="w-full mb-4">
             <mat-label>To</mat-label>
             <input matInput [matDatepicker]="toPicker" formControlName="toDate" />
             <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
             <mat-datepicker #toPicker></mat-datepicker>
           </mat-form-field>
 
+          <mat-form-field appearance="fill" class="w-full mb-4">
+            <mat-label>Badge Class</mat-label>
+            <input matInput formControlName="badgeClass" placeholder="e.g., bg-green-100 text-green-800" />
+          </mat-form-field>
+
           <!-- Image Upload -->
-          <div>
-            <label class="block text-gray-700 font-semibold mb-2">Upload Image</label>
-            <input
-              type="file"
-              (change)="onImageSelected($event)"
-              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-              file:rounded-full file:border-0
-              file:text-sm file:font-semibold
-              file:bg-yellow-50 file:text-yellow-700
-              hover:file:bg-yellow-100"
-            />
+          <div class="mb-4">
+            <label class="block font-medium mb-2">Upload Image</label>
+            <input type="file" (change)="onImageSelected($event)" />
+            <div *ngIf="previewImage" class="mt-2">
+              <img [src]="previewImage" class="w-40 h-32 object-cover rounded" />
+            </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="text-right mt-4">
-            <button mat-raised-button color="primary" type="submit">
-              Submit
+          <div class="text-right">
+            <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+              {{ isSubmitting ? 'Submitting...' : 'Submit' }}
             </button>
           </div>
         </form>
       </div>
     </mat-tab>
 
-    <!-- Tab 2: See Experience Info -->
+    <!-- See Experiences -->
     <mat-tab label="See Experience Info">
       <div *ngIf="experienceList.length === 0" class="mt-6 text-center text-gray-500">
-        No experience data yet...
+        No experience data found.
       </div>
 
       <div *ngFor="let exp of experienceList" class="max-w-2xl mx-auto mt-6">
-        <div class="bg-white rounded-xl shadow-md p-4 space-y-2">
-          <img *ngIf="exp.imageUrl" [src]="exp.imageUrl" class="w-full h-48 object-cover rounded" />
+        <div class="bg-white rounded-xl shadow-md p-4">
+          <img *ngIf="exp.image" [src]="exp.image" class="w-full h-48 object-cover rounded mb-4" />
           <h2 class="text-xl font-bold">{{ exp.title }}</h2>
           <p>{{ exp.description }}</p>
           <p><strong>From:</strong> {{ exp.fromDate | date:'mediumDate' }}</p>
           <p><strong>To:</strong> {{ exp.toDate | date:'mediumDate' }}</p>
+          <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm" [ngClass]="exp.badgeClass">
+            {{ exp.fromDate | date:'MMM yyyy' }} - {{ exp.toDate | date:'MMM yyyy' }}
+          </span>
         </div>
       </div>
     </mat-tab>

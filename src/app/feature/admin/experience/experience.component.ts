@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { FirebaseService } from '../Firebase/firebase-service.service';
 
 @Component({
   selector: 'app-experience',
@@ -23,44 +25,78 @@ import { MatTabsModule } from '@angular/material/tabs';
   ],
   templateUrl: './experience.component.html',
 })
-export class ExperienceComponent {
+export class ExperienceComponent implements OnInit {
   experienceForm = new FormGroup({
     title: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
     fromDate: new FormControl('', Validators.required),
     toDate: new FormControl('', Validators.required),
+    badgeClass: new FormControl('', Validators.required),
     image: new FormControl<File | null>(null),
   });
 
-  previewImage: string | ArrayBuffer | null = null;
   experienceList: any[] = [];
+  previewImage: string | ArrayBuffer | null = null;
+  selectedImage: File | null = null;
+  isSubmitting = false;
 
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
+  constructor(private firebaseService: FirebaseService) {}
+
+  ngOnInit(): void {
+    this.firebaseService.getDocuments('Experience').subscribe({
+      next: (data) => this.experienceList = data,
+      error: (err) => console.error('Error fetching experience data:', err)
+    });
+  }
+
+  onImageSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
     if (file) {
-      this.experienceForm.get('image')?.setValue(file);
+      this.selectedImage = file;
       const reader = new FileReader();
       reader.onload = () => {
         this.previewImage = reader.result;
+        this.experienceForm.patchValue({ image: file });
+        this.experienceForm.get('image')?.updateValueAndValidity();
       };
       reader.readAsDataURL(file);
     }
   }
 
-  submitExperienceForm() {
-    if (this.experienceForm.valid) {
-      const formData = this.experienceForm.value;
-      const experience = {
-        title: formData.title,
-        description: formData.description,
-        fromDate: formData.fromDate,
-        toDate: formData.toDate,
-        imageUrl: this.previewImage
-      };
+  submitExperienceForm(): void {
+    if (this.experienceForm.valid && this.selectedImage) {
+      this.isSubmitting = true;
 
-      this.experienceList.push(experience);
-      this.experienceForm.reset();
-      this.previewImage = null;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const formValue = this.experienceForm.value;
+        const experienceData = {
+          title: formValue.title,
+          description: formValue.description,
+          fromDate: new Date(formValue.fromDate!),  
+          toDate: new Date(formValue.toDate!),
+          badgeClass: formValue.badgeClass,
+          image: reader.result
+        };
+
+        this.firebaseService.addDocument('Experience', experienceData).subscribe({
+          next: () => {
+            this.isSubmitting = false;
+            alert('Experience added successfully!');
+            this.experienceForm.reset();
+            this.previewImage = null;
+            this.selectedImage = null;
+          },
+          error: (err) => {
+            this.isSubmitting = false;
+            alert('Error adding experience.');
+            console.error(err);
+          }
+        });
+      };
+      reader.readAsDataURL(this.selectedImage);
+    } else {
+      alert('Please fill out all fields and select an image.');
     }
   }
 }
