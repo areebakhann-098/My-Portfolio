@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
+import { FirebaseService } from '../Firebase/firebase-service.service';
 
 @Component({
   selector: 'app-profile',
@@ -46,11 +47,45 @@ export class ProfileComponent {
     fiverr: new FormControl('')
   });
 
+  constructor(private firebaseService: FirebaseService) {}
+
   submitForm() {
     if (this.profileForm.valid) {
       this.submittedProfile = this.profileForm.value;
       console.log('Profile Data:', this.submittedProfile);
+
+      // Save to Firestore using FirebaseService
+      this.firebaseService.addDocument('profiles', this.submittedProfile).subscribe(
+        (response) => {
+          console.log('Profile data saved to Firestore:', response);
+          // Fetch updated profile after submission
+          this.fetchProfileData();
+        },
+        (error) => {
+          console.error('Error saving profile data:', error);
+        }
+      );
+
+      // Optionally, you can reset the form here
       this.profileForm.reset();
     }
+  }
+
+  // Retrieve profile data from Firestore
+  fetchProfileData() {
+    this.firebaseService.getDocuments('profiles').subscribe(
+      (profiles) => {
+        if (profiles.length > 0) {
+          this.submittedProfile = profiles[0];  // Assuming only one profile is present
+        }
+      },
+      (error) => {
+        console.error('Error fetching profile data:', error);
+      }
+    );
+  }
+
+  ngOnInit() {
+    this.fetchProfileData();  // Fetch profile data on component initialization
   }
 }

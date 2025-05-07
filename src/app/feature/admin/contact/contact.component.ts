@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { FirebaseService } from '../Firebase/firebase-service.service';
 
 @Component({
   selector: 'app-contact',
@@ -8,27 +9,18 @@ import { MatTableModule } from '@angular/material/table';
   imports: [CommonModule, MatTableModule],
   templateUrl: './contact.component.html',
 })
-export class ContactComponent {
+export class ContactComponent implements OnInit {
   displayedColumns: string[] = ['fullName', 'email', 'subject', 'message'];
+  contactList: any[] = [];
 
-  contactList = [
-    {
-      fullName: 'Usman Niaz',
-      email: 'ali@example.com',
-      subject: 'Feedback',
-      message: 'Great job on the website!',
-    },
-    {
-      fullName: 'Areeba Khalid',
-      email: 'areebakhalid9854@example.com',
-      subject: 'Bug Report',
-      message: 'I found a bug on the project submission page.',
-    },
-    {
-      fullName: 'Imran ali',
-      email: 'john@example.com',
-      subject: 'Support',
-      message: 'How can I reset my password?',
-    },
-  ];
+  constructor(private firebaseService: FirebaseService) {}
+
+  ngOnInit() {
+    this.firebaseService.getDocuments('contacts').subscribe({
+      next: (data) => {
+        this.contactList = data;
+      },
+      error: (err) => console.error('Failed to fetch contacts:', err)
+    });
+  }
 }

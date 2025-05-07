@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FirebaseService } from '../../../admin/Firebase/firebase-service.service';
 
 @Component({
   selector: 'app-about',
@@ -9,33 +10,46 @@ import { RouterModule } from '@angular/router';
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.css']
 })
-export class AboutComponent {
-  profileImage = 'assets/images/profile.jpg';
+export class AboutComponent implements OnInit {
+  profileImage: string = ''; // URL for the profile image
+  heading: string = ''; // Title or heading for the about section
+  paragraphs: string[] = []; // Array of paragraphs
+  socialLinks: { icon: string, url: string }[] = []; // Social links
+  cvFile: string = ''; // CV file URL
+  isDataLoaded: boolean = false; // Flag to check if the data is loaded
 
-  heading = 'I am Professional User Experience Designer';
+  constructor(private firebaseService: FirebaseService) {}
 
-  paragraphs = [
-    `I specialize in building responsive, high-performance web applications using Angular 19. My experience includes real-time data updates, form validation, and Firebase integration. I develop multilingual apps with real-time functionality and image uploads for global users. I design visually appealing, responsive UIs using Bootstrap, PrimeNG, and TailwindCSS. My focus is on creating clean, maintainable, user-friendly applications with optimized performance.`,
-    `I design and develop services for customers specializing creating stylish, modern websites, web services.`
-  ];
+  ngOnInit(): void {
+    this.fetchAboutData();
+  }
 
-  projectButton = {
-    label: 'My Project',
-    link: '/projects',
-    fragment: 'projects'
-  };
-
-  cvButton = {
-    label: 'Download CV',
-    filePath: 'assets/images/CV.pdf',
-    fileName: 'CV.pdf'
-  };
-
-  socialLinks = [
-    { icon: 'fab fa-facebook-f', url: 'https://facebook.com/yourprofile' },
-    { icon: 'fab fa-instagram', url: 'https://instagram.com/yourprofile' },
-    { icon: 'fab fa-linkedin-in', url: 'https://www.linkedin.com/in/areeba-khalid-03619b288/' },
-    { icon: 'fab fa-github', url: 'https://github.com/areebakhann-098' },
-    { icon: 'fas fa-envelope', url: 'mailto:areebakhalid9854@example.com' },
-  ];
-}
+  fetchAboutData(): void {
+    // Fetch the data from Firestore
+    this.firebaseService.getDocuments('about').subscribe({
+      next: (data) => {
+        if (data && data.length > 0) {
+          const aboutData = data[0]; // Assuming only one document for "about"
+          
+          // Use bracket notation to access properties
+          this.heading = aboutData['title']; // Access title using bracket notation
+          this.paragraphs = aboutData['description'].split('\n'); // Assuming description is stored as a single string with newlines
+          this.socialLinks = [
+            { icon: 'fab fa-facebook-f', url: aboutData['facebook'] },
+            { icon: 'fab fa-instagram', url: aboutData['instagram'] },
+            { icon: 'fab fa-linkedin-in', url: aboutData['linkedin'] },
+            { icon: 'fab fa-github', url: aboutData['github'] },
+            { icon: 'fab fa-fiverr', url: aboutData['fiverr'] }
+          ];
+          this.profileImage = aboutData['photoUrl']; // Access photoUrl using bracket notation
+          this.cvFile = aboutData['cvFileUrl']; // Access cvFileUrl using bracket notation
+        }
+        this.isDataLoaded = true; // Mark the data as loaded
+      },
+      error: (err) => {
+        console.error('Error fetching about data:', err);
+        this.isDataLoaded = true; // Mark as loaded even if there was an error
+      }
+    });
+  }
+}  

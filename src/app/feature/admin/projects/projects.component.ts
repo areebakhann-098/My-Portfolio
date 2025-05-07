@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { FirebaseService } from '../Firebase/firebase-service.service';
 
 @Component({
   selector: 'app-project',
@@ -23,7 +24,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   ],
   templateUrl: './projects.component.html',
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements OnInit {
   categoryOptions = ['Web Development', 'Mobile App', 'Machine Learning', 'UI/UX Design'];
 
   projectForm = new FormGroup({
@@ -31,37 +32,90 @@ export class ProjectsComponent {
     category: new FormControl('', Validators.required),
     shortDescription: new FormControl('', Validators.required),
     fullDescription: new FormControl('', Validators.required),
-    image: new FormControl<File | null>(null),
+    image: new FormControl<string | null>(null), // Store base64 string
+    technologies: new FormControl('', Validators.required)
+
   });
 
+  imagePreview: string | ArrayBuffer | null = null;
+  base64Image: string | null = null;
+  isSubmitting = false;
   projectList: any[] = [];
-  imagePreview: string | null = null;
 
-  onImageSelected(event: any) {
-    const file = event.target.files[0];
+  constructor(private firebaseService: FirebaseService) {}
+
+  ngOnInit(): void {
+    this.loadProjects();
+  }
+
+  loadProjects(): void {
+    this.firebaseService.getDocuments('projects').subscribe({
+      next: (data) => {
+        this.projectList = data;
+      },
+      error: (err) => {
+        console.error('Error fetching project data:', err);
+      }
+    });
+  }
+
+  onImageSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
     if (file) {
-      this.projectForm.get('image')?.setValue(file);
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        alert('Image size exceeds 5MB.');
+        return;
+      }
 
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagePreview = reader.result as string;
+        this.imagePreview = reader.result;
+        this.base64Image = reader.result as string;
+        this.projectForm.patchValue({ image: this.base64Image });
+        this.projectForm.get('image')?.updateValueAndValidity();
       };
       reader.readAsDataURL(file);
     }
   }
 
-  submitProjectForm() {
-    if (this.projectForm.valid) {
-      const newProject = {
-        ...this.projectForm.value,
-        imageUrl: this.imagePreview,
+  async submitProjectForm(): Promise<void> {
+    if (this.projectForm.valid && this.base64Image) {
+      this.isSubmitting = true;
+  
+      const formValue = this.projectForm.value;
+  
+      // ✅ Convert comma-separated technologies string to array
+      const technologiesArray = formValue.technologies
+        ? formValue.technologies.split(',').map((tech: string) => tech.trim())
+        : [];
+  
+      const projectData = {
+        title: formValue.title,
+        category: formValue.category,
+        shortDescription: formValue.shortDescription,
+        fullDescription: formValue.fullDescription,
+        imageUrl: formValue.image,
+        technologies: technologiesArray
       };
-
-      this.projectList.push(newProject);
-      console.log('Project added:', newProject);
-
-      this.projectForm.reset();
-      this.imagePreview = null;
+  
+      this.firebaseService.addDocument('projects', projectData).subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          alert('Project added successfully!');
+          this.loadProjects();
+          this.projectForm.reset();
+          this.imagePreview = null;
+          this.base64Image = null;
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          console.error(err);
+          alert('Error saving project.');
+        }
+      });
+    } else {
+      alert('Please fill all fields and upload an image.');
     }
   }
-}
+}  

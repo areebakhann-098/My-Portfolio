@@ -8,14 +8,20 @@ export interface AdminInterface {
     contact: contactData;
 }
 
+// src/app/feature/user/components/about/about.model.ts
+
 export interface AboutData {
-    name: string;
-    description: string;
-    experience: number;
-    projects: number;
-    clients: number;
-    imageUrl: string;
-}
+    heading: string;
+    paragraphs: string[];
+    socialLinks: { icon: string, url: string }[];
+    profileImageUrl: string;
+    cvFileUrl: string;
+  }
+  
+  
+
+
+
 
 export interface profileData {
     name: string;
@@ -64,3 +70,13 @@ export interface contactData{
 
 
 // }
+export interface Project {
+    id: string;
+    title: string;
+    category: string;
+    shortDescription: string;
+    fullDescription: string;
+    imageUrl: string;
+    technologies?: string[];
+  }
+  

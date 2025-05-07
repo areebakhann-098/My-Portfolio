@@ -26,7 +26,6 @@
             ></textarea>
           </mat-form-field>
 
-     
           <!-- Social Media Links -->
           <mat-form-field appearance="fill" class="w-full">
             <mat-label>Facebook</mat-label>
@@ -52,33 +51,38 @@
             <mat-label>Fiverr</mat-label>
             <input matInput placeholder="Fiverr profile link" formControlName="fiverr" />
           </mat-form-field>
-     <!-- Upload CV -->
-     <div>
-      <label class="block text-gray-700 font-semibold mb-2">Upload CV</label>
-      <input
-        type="file"
-        (change)="onCVSelected($event)"
-        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-        file:rounded-full file:border-0
-        file:text-sm file:font-semibold
-        file:bg-green-50 file:text-green-700
-        hover:file:bg-green-100"
-      />
-    </div>
 
-    <!-- Upload Photo -->
-    <div>
-      <label class="block text-gray-700 font-semibold mb-2">Upload Photo</label>
-      <input
-        type="file"
-        (change)="onPhotoSelected($event)"
-        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-        file:rounded-full file:border-0
-        file:text-sm file:font-semibold
-        file:bg-blue-50 file:text-blue-700
-        hover:file:bg-blue-100"
-      />
-    </div>
+          <!-- New Address Field -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Address</mat-label>
+            <input matInput placeholder="Enter your address" formControlName="address" />
+          </mat-form-field>
+
+          <!-- New Email Field -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Email</mat-label>
+            <input matInput placeholder="Enter your email" formControlName="email" />
+          </mat-form-field>
+
+          <!-- New Phone Number Field -->
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Phone Number</mat-label>
+            <input matInput placeholder="Enter your phone number" formControlName="phoneNumber" />
+          </mat-form-field>
+
+          <!-- Upload Photo -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Upload Photo</label>
+            <input
+              type="file"
+              (change)="onPhotoSelected($event)"
+              class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              file:bg-blue-50 file:text-blue-700
+              hover:file:bg-blue-100"
+            />
+          </div>
 
           <!-- Submit Button -->
           <div class="text-right mt-4">
@@ -90,9 +94,34 @@
       </div>
     </mat-tab>
 
-    <!-- See About Data Tab -->
-    <mat-tab label="See About Info">
-      <div class="mt-6 text-center text-gray-500">About info display section coming soon...</div>
-    </mat-tab>
+  <!-- See About Info Tab -->
+<mat-tab label="See About Info">
+  <div *ngIf="aboutDataList.length === 0" class="mt-6 text-center text-gray-500">
+    No about info available...
+  </div>
+
+  <div *ngFor="let about of aboutDataList" class="max-w-2xl mx-auto p-4">
+    <div class="bg-white rounded-xl shadow-md p-4 space-y-2">
+      <div *ngIf="about.photoUrl">
+        <img [src]="about.photoUrl" alt="About Photo" class="w-full h-48 object-cover rounded" />
+      </div>
+
+      <h2 class="text-xl font-bold">{{ about.title }}</h2>
+      <p>{{ about.description }}</p>
+
+      <div class="space-y-1">
+        <p *ngIf="about.facebook"><strong>Facebook:</strong> {{ about.facebook }}</p>
+        <p *ngIf="about.instagram"><strong>Instagram:</strong> {{ about.instagram }}</p>
+        <p *ngIf="about.github"><strong>GitHub:</strong> {{ about.github }}</p>
+        <p *ngIf="about.linkedin"><strong>LinkedIn:</strong> {{ about.linkedin }}</p>
+        <p *ngIf="about.fiverr"><strong>Fiverr:</strong> {{ about.fiverr }}</p>
+        <p *ngIf="about.address"><strong>Address:</strong> {{ about.address }}</p>
+        <p *ngIf="about.email"><strong>Email:</strong> {{ about.email }}</p>
+        <p *ngIf="about.phoneNumber"><strong>Phone:</strong> {{ about.phoneNumber }}</p>
+      </div>
+    </div>
+  </div>
+</mat-tab>
+
   </mat-tab-group>
 </section>
