@@ -32,9 +32,9 @@ export class ProjectsComponent implements OnInit {
     category: new FormControl('', Validators.required),
     shortDescription: new FormControl('', Validators.required),
     fullDescription: new FormControl('', Validators.required),
-    image: new FormControl<string | null>(null), // Store base64 string
-    technologies: new FormControl('', Validators.required)
-
+    image: new FormControl<string | null>(null),
+    technologies: new FormControl('', Validators.required),
+    projectLink: new FormControl('', Validators.required) // Add projectLink form control
   });
 
   imagePreview: string | ArrayBuffer | null = null;
@@ -82,23 +82,23 @@ export class ProjectsComponent implements OnInit {
   async submitProjectForm(): Promise<void> {
     if (this.projectForm.valid && this.base64Image) {
       this.isSubmitting = true;
-  
+
       const formValue = this.projectForm.value;
-  
-      // ✅ Convert comma-separated technologies string to array
+
       const technologiesArray = formValue.technologies
         ? formValue.technologies.split(',').map((tech: string) => tech.trim())
         : [];
-  
+
       const projectData = {
         title: formValue.title,
         category: formValue.category,
         shortDescription: formValue.shortDescription,
         fullDescription: formValue.fullDescription,
         imageUrl: formValue.image,
-        technologies: technologiesArray
+        technologies: technologiesArray,
+        projectLink: formValue.projectLink // Store project link
       };
-  
+
       this.firebaseService.addDocument('projects', projectData).subscribe({
         next: () => {
           this.isSubmitting = false;
@@ -118,4 +118,4 @@ export class ProjectsComponent implements OnInit {
       alert('Please fill all fields and upload an image.');
     }
   }
-}  
+}

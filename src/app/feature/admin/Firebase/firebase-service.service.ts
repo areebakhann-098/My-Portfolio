@@ -1,20 +1,12 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environment';
+import { environment } from '../../../environment'; // Adjust path if needed
 import { initializeApp } from 'firebase/app';
-import { getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  QuerySnapshot,
-  DocumentData,
-  addDoc,
-  deleteDoc,
-  doc
-} from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, QuerySnapshot, DocumentData } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { Observable, from } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
- 
+import { map, catchError } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,31 +14,41 @@ export class FirebaseService {
   private app;
   private db;
   private storage;
- 
+  private auth;
+
   constructor() {
+    // Initialize Firebase App
     this.app = initializeApp(environment.firebaseConfig);
-    this.storage = getStorage(this.app);
+
+    // Initialize Services
     this.db = getFirestore(this.app);
+    this.storage = getStorage(this.app);
+    this.auth = getAuth(this.app);
+    
   }
- 
+
+  // ✅ Login (Auth)
+  login(email: string, password: string): Promise<any> {
+    return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  // ✅ Upload File to Storage
   uploadFile(file: File, folder: string): Promise<string> {
     const storageRef = ref(this.storage, `${folder}/${Date.now()}_${file.name}`);
     return uploadBytes(storageRef, file)
       .then(() => getDownloadURL(storageRef))
       .catch((error) => {
-        console.error("Upload failed", error);
-        throw new Error("Upload failed");
+        console.error('Upload failed:', error);
+        throw new Error('Upload failed');
       });
   }
 
-
- 
-  // ✅ Add Document
+  // ✅ Add Document to Firestore
   addDocument(collectionName: string, data: any): Observable<any> {
     const collectionRef = collection(this.db, collectionName);
     return from(addDoc(collectionRef, data)).pipe(
       map(docRef => {
-        console.log('Document added:', docRef.id);
+        console.log('Document added with ID:', docRef.id);
         return docRef;
       }),
       catchError(error => {
@@ -55,8 +57,8 @@ export class FirebaseService {
       })
     );
   }
- 
-  // ✅ Get Documents
+
+  // ✅ Get All Documents
   getDocuments(collectionName: string): Observable<DocumentData[]> {
     const collectionRef = collection(this.db, collectionName);
     return from(getDocs(collectionRef)).pipe(
@@ -72,8 +74,8 @@ export class FirebaseService {
       })
     );
   }
- 
-  // ✅ Delete Document
+
+  // ✅ Delete Document by ID
   deleteDocument(collectionName: string, docId: string): Observable<any> {
     const docRef = doc(this.db, collectionName, docId);
     return from(deleteDoc(docRef)).pipe(
@@ -87,5 +89,11 @@ export class FirebaseService {
       })
     );
   }
+    // ✅ Check if user is authenticated
+    isAuthenticated(): boolean {
+      const user = this.auth.currentUser;
+      return !!user; // true if logged in
+    }
+  
+
 }
- 

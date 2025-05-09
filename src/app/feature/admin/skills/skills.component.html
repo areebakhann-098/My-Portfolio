@@ -66,7 +66,7 @@
 
       <div *ngFor="let skill of skillsDataList" class="max-w-2xl mx-auto mt-6">
         <div class="bg-white rounded-xl shadow-md p-4 space-y-2">
-          <img *ngIf="skill.imageUrl" [src]="skill.imageUrl" class="w-full h-48 object-cover rounded" />
+          <img *ngIf="skill.image" [src]="skill.image" class="w-full h-48 object-cover rounded" />
           <h2 class="text-xl font-bold">{{ skill.title }}</h2>
           <p>{{ skill.description }}</p>
           <p><strong>Image Title:</strong> {{ skill.imageTitle }}</p>

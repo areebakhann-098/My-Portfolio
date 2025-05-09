@@ -39,7 +39,6 @@ export class AboutComponent implements OnInit {
             { icon: 'fab fa-instagram', url: aboutData['instagram'] },
             { icon: 'fab fa-linkedin-in', url: aboutData['linkedin'] },
             { icon: 'fab fa-github', url: aboutData['github'] },
-            { icon: 'fab fa-fiverr', url: aboutData['fiverr'] }
           ];
           this.profileImage = aboutData['photoUrl']; // Access photoUrl using bracket notation
           this.cvFile = aboutData['cvFileUrl']; // Access cvFileUrl using bracket notation

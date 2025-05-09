@@ -18,28 +18,27 @@
 
     <!-- Desktop Nav -->
     <div class="hidden md:flex items-center mr-5 space-x-6 text-sm font-medium text-gray-800">
-      <a routerLink="/" class="hover:text-purple-500 transition">Home</a>
-      <a routerLink="/about" class="hover:text-purple-500 transition">About</a>
-      <a routerLink="/experience" class="hover:text-purple-500 transition">Experience</a>
-      <a routerLink="/projects" class="hover:text-purple-500 transition">Projects</a>
-      <a routerLink="/skills" class="hover:text-purple-500 transition">Skills</a>
-      <a routerLink="/services" class="hover:text-purple-500 transition">Services</a>
-      <a routerLink="/contact" class="bg-purple-500 hover:bg-purple-600 text-white text-sm font-semibold px-5 py-2 rounded transition">
-        Contact
-      </a>
+      <a href="#home" class="hover:text-purple-500 transition scroll-smooth">Home</a>
+      <a href="#about" class="hover:text-purple-500 transition scroll-smooth">About</a>
+      <a href="#experience" class="hover:text-purple-500 transition scroll-smooth">Experience</a>
+      <a href="#projects" class="hover:text-purple-500 transition scroll-smooth">Projects</a>
+      <a href="#skills" class="hover:text-purple-500 transition scroll-smooth">Skills</a>
+      <a href="#services" class="hover:text-purple-500 transition scroll-smooth">Services</a>
+      <a href="#contact" class="bg-purple-500 hover:bg-purple-600 text-white text-sm font-semibold px-5 py-2 rounded transition">Contact</a>
     </div>
+    
   </div>
 
-  <!-- Mobile Menu -->
-  <div *ngIf="isMenuOpen" class="md:hidden px-4 pb-4 space-y-2 text-sm font-medium text-gray-800">
-    <a routerLink="/" class="block hover:text-purple-500 transition">Home</a>
-    <a routerLink="/about" class="block hover:text-purple-500 transition">About</a>
-    <a routerLink="/experience" class="block hover:text-purple-500 transition">Experience</a>
-    <a routerLink="/projects" class="block hover:text-purple-500 transition">Projects</a>
-    <a routerLink="/skills" class="block hover:text-purple-500 transition">Skills</a>
-    <a routerLink="/services" class="block hover:text-purple-500 transition">Services</a>
-    <a routerLink="/contact" class="block bg-purple-500 hover:bg-purple-600 text-white text-center text-sm font-semibold py-2 px-5 rounded transition">
-      Contact
-    </a>
-  </div>
+ <!-- Mobile Menu -->
+<div *ngIf="isMenuOpen" class="md:hidden px-4 pb-4 space-y-2 text-sm font-medium text-gray-800">
+  <a href="#home" class="block hover:text-purple-500 transition scroll-smooth" (click)="closeMenu()">Home</a>
+  <a href="#about" class="block hover:text-purple-500 transition scroll-smooth" (click)="closeMenu()">About</a>
+  <a href="#experience" class="block hover:text-purple-500 transition scroll-smooth" (click)="closeMenu()">Experience</a>
+  <a href="#projects" class="block hover:text-purple-500 transition scroll-smooth" (click)="closeMenu()">Projects</a>
+  <a href="#skills" class="block hover:text-purple-500 transition scroll-smooth" (click)="closeMenu()">Skills</a>
+  <a href="#services" class="block hover:text-purple-500 transition scroll-smooth" (click)="closeMenu()">Services</a>
+  <a href="#contact" class="block bg-purple-500 hover:bg-purple-600 text-white text-center text-sm font-semibold py-2 px-5 rounded transition" (click)="closeMenu()">Contact</a>
+</div>
+
+  
 </nav>

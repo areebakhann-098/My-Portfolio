@@ -1,5 +1,5 @@
-<section data-aos="fade-up" class="p-8 bg-white min-h-screen">
-  <h1 class="text-4xl font-bold text-center mb-10">My Experience</h1>
+<section  id="experience"data-aos="fade-up" class="p-8  bg-white min-h-screen">
+  <h1 class="text-4xl  font-bold text-center mb-10">My Experience</h1>
 
   <!-- Show this when there's no experience -->
   <div *ngIf="experienceList.length === 0" class="text-center text-gray-500">
@@ -7,7 +7,7 @@
   </div>
 
   <!-- Grid layout for experience cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto ">
     <div *ngFor="let exp of experienceList" class="bg-gray-100 p-6 rounded-xl shadow-md">
       <img *ngIf="exp.image" [src]="exp.image" alt="Experience Image"
            class="w-full h-48 object-cover rounded mb-4" />

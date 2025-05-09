@@ -21,10 +21,12 @@
           </p> -->
 
         <!-- View Project Button -->
-<a [href]="project.projectUrl" target="_blank"
-class="mt-4 mr-2 inline-block px-4 py-1 border border-purple-600 text-purple-600 text-sm rounded-full hover:bg-purple-600 hover:text-white transition">
-View Project →
-</a>
+         
+        <a [href]="project.projectLink" target="_blank"
+        class="mt-4 mr-2 inline-block px-4 py-1 border border-purple-600 text-purple-600 text-sm rounded-full hover:bg-purple-600 hover:text-white transition">
+        Project Link →
+     </a>
+     
 <a [routerLink]="['/project-detail', project.id]" class="px-4 py-1 border border-purple-600 text-purple-600 text-sm rounded-full hover:bg-purple-600 hover:text-white transition">
   View Details →
 </a>

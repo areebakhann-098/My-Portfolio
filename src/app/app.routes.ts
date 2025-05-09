@@ -9,6 +9,8 @@ import { ExperienceComponent } from './feature/admin/experience/experience.compo
 import { ServicesComponent } from './feature/admin/services/services.component';
 import { ProfileComponent } from './feature/admin/profile/profile.component';
 import { ContactComponent } from './feature/admin/contact/contact.component';
+import { AuthGuard } from './auth/login.guard';
+import { LoginComponent } from './core/login/login.component';
 
 export const routes: Routes = [
   // User front-end
@@ -28,15 +30,17 @@ export const routes: Routes = [
   },
 
   // Admin login (public)
-  // {
-  //   path: 'admin/login',
-  //   component: LoginComponent
-  // },
+  {
+    path: 'admin/login',
+    component: LoginComponent,
+    canActivate: [AuthGuard]
+  },
 
   // Admin area (no guards for now)
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'hero', component: HeroComponent },
       { path: 'about', component: AboutComponent },

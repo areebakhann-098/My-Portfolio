@@ -1,0 +1,14 @@
+@media (max-width: 1024px) {
+    :host {
+      position: absolute;
+      z-index: 50;
+      width: 16rem; /* 64 */
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+  
+    :host-context(.sidebar-open) {
+      transform: translateX(0);
+    }
+  }
+  

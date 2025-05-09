@@ -28,6 +28,7 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
 export class AboutComponent implements OnInit {
   aboutDataList: any[] = [];
   imagePreview: string | ArrayBuffer | null = null;
+  base64Image: string | null = null;
   selectedFile: File | null = null;
 
   aboutForm: FormGroup = new FormGroup({
@@ -67,52 +68,51 @@ export class AboutComponent implements OnInit {
 
     if (file) {
       this.selectedFile = file;
-
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreview = reader.result;
+        this.base64Image = reader.result as string;
+        this.aboutForm.patchValue({ photo: this.base64Image });
+        this.aboutForm.get('photo')?.updateValueAndValidity();
       };
       reader.readAsDataURL(file);
     }
   }
 
   submitAboutForm(): void {
-    if (this.aboutForm.invalid || !this.selectedFile) {
+    if (this.aboutForm.invalid || !this.base64Image) {
       alert('Please fill all required fields and select a photo.');
       return;
     }
 
-    this.firebaseService.uploadFile(this.selectedFile, 'about-images').then((photoUrl) => {
-      const aboutData = {
-        title: this.aboutForm.value.title,
-        description: this.aboutForm.value.description,
-        photoUrl,
-        facebook: this.aboutForm.value.facebook,
-        instagram: this.aboutForm.value.instagram,
-        github: this.aboutForm.value.github,
-        linkedin: this.aboutForm.value.linkedin,
-        fiverr: this.aboutForm.value.fiverr,
-        address: this.aboutForm.value.address,
-        email: this.aboutForm.value.email,
-        phoneNumber: this.aboutForm.value.phoneNumber,
-      };
+    // Since the image is already base64, no need to upload it separately
+    const aboutData = {
+      title: this.aboutForm.value.title,
+      description: this.aboutForm.value.description,
+      photoUrl: this.base64Image, // Save base64 image
+      facebook: this.aboutForm.value.facebook,
+      instagram: this.aboutForm.value.instagram,
+      github: this.aboutForm.value.github,
+      linkedin: this.aboutForm.value.linkedin,
+      fiverr: this.aboutForm.value.fiverr,
+      address: this.aboutForm.value.address,
+      email: this.aboutForm.value.email,
+      phoneNumber: this.aboutForm.value.phoneNumber,
+    };
 
-      this.firebaseService.addDocument('about', aboutData).subscribe({
-        next: () => {
-          alert('About info saved successfully!');
-          this.aboutForm.reset();
-          this.imagePreview = null;
-          this.selectedFile = null;
-          this.getAboutData();
-        },
-        error: (err) => {
-          console.error('Error saving about info:', err);
-          alert('Failed to save about info.');
-        },
-      });
-    }).catch((error) => {
-      console.error('Image upload failed:', error);
-      alert('Image upload failed. Please try again.');
+    this.firebaseService.addDocument('about', aboutData).subscribe({
+      next: () => {
+        alert('About info saved successfully!');
+        this.aboutForm.reset();
+        this.imagePreview = null;
+        this.base64Image = null;
+        this.selectedFile = null;
+        this.getAboutData();
+      },
+      error: (err) => {
+        console.error('Error saving about info:', err);
+        alert('Failed to save about info.');
+      },
     });
   }
 }
