@@ -84,6 +84,20 @@ export class ProfileComponent {
       }
     );
   }
+    // Delete profile data from Firestore
+  deleteProfile() {
+    if (this.submittedProfile) {
+      this.firebaseService.deleteDocument('profiles', this.submittedProfile.id).subscribe(
+        () => {
+          console.log('Profile deleted from Firestore');
+          this.submittedProfile = null;  // Clear the profile data after deletion
+        },
+        (error) => {
+          console.error('Error deleting profile:', error);
+        }
+      );
+    }
+  }
 
   ngOnInit() {
     this.fetchProfileData();  // Fetch profile data on component initialization

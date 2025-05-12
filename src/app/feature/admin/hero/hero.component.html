@@ -82,6 +82,10 @@
           <p><strong>Clients:</strong> {{ hero.clients }}</p>
           <p><strong>Projects:</strong> {{ hero.projectsCompleted }}</p>
         </div>
+          <!-- Delete Button -->
+      <button mat-raised-button color="warn" (click)="deleteHero(hero.id)">
+        Delete Hero
+      </button>
       </div>
     </mat-tab>
   </mat-tab-group>

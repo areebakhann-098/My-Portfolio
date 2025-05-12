@@ -3,12 +3,12 @@ import { environment } from '../../../environment'; // Adjust path if needed
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, QuerySnapshot, DocumentData } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { Observable, from } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FirebaseService {
   private app;
@@ -24,7 +24,9 @@ export class FirebaseService {
     this.db = getFirestore(this.app);
     this.storage = getStorage(this.app);
     this.auth = getAuth(this.app);
-    
+
+    // Check authentication state on app load
+    this.checkAuthState();
   }
 
   // ✅ Login (Auth)
@@ -47,11 +49,11 @@ export class FirebaseService {
   addDocument(collectionName: string, data: any): Observable<any> {
     const collectionRef = collection(this.db, collectionName);
     return from(addDoc(collectionRef, data)).pipe(
-      map(docRef => {
+      map((docRef) => {
         console.log('Document added with ID:', docRef.id);
         return docRef;
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error adding document:', error);
         throw error;
       })
@@ -63,12 +65,12 @@ export class FirebaseService {
     const collectionRef = collection(this.db, collectionName);
     return from(getDocs(collectionRef)).pipe(
       map((querySnapshot: QuerySnapshot<DocumentData>) => {
-        return querySnapshot.docs.map(doc => ({
+        return querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }));
       }),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error getting documents:', error);
         throw error;
       })
@@ -81,19 +83,39 @@ export class FirebaseService {
     return from(deleteDoc(docRef)).pipe(
       map(() => ({
         success: true,
-        message: `Document with ID ${docId} deleted.`
+        message: `Document with ID ${docId} deleted.`,
       })),
-      catchError(error => {
+      catchError((error) => {
         console.error('Error deleting document:', error);
         throw error;
       })
     );
   }
-    // ✅ Check if user is authenticated
-    isAuthenticated(): boolean {
-      const user = this.auth.currentUser;
-      return !!user; // true if logged in
-    }
-  
 
+  // ✅ Check if user is authenticated
+  isAuthenticated(): boolean {
+    const user = this.auth.currentUser;
+    return !!user; // true if logged in
+  }
+
+  // ✅ Monitor authentication state
+  checkAuthState() {
+    onAuthStateChanged(this.auth, (user) => {
+      if (user) {
+        // If user is logged in, store login status in localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+      } else {
+        // If user is logged out, clear login status from localStorage
+        localStorage.removeItem('isLoggedIn');
+      }
+    });
+  }
+
+  // ✅ Logout
+  logout(): void {
+    // Clear the 'isLoggedIn' flag in localStorage
+    localStorage.removeItem('isLoggedIn');
+    // Optionally, sign out from Firebase Authentication
+    signOut(this.auth);
+  }
 }

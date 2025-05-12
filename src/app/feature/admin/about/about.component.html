@@ -118,6 +118,15 @@
             <p *ngIf="about.email"><strong>Email:</strong> {{ about.email }}</p>
             <p *ngIf="about.phoneNumber"><strong>Phone:</strong> {{ about.phoneNumber }}</p>
           </div>
+           <!-- ✅ Delete Button -->
+      <div class="text-right mt-4">
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="deleteAboutData(about.id)">
+          Delete
+        </button>
+      </div>
         </div>
       </div>
     </mat-tab>

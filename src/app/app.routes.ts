@@ -11,6 +11,7 @@ import { ProfileComponent } from './feature/admin/profile/profile.component';
 import { ContactComponent } from './feature/admin/contact/contact.component';
 import { AuthGuard } from './auth/login.guard';
 import { LoginComponent } from './core/login/login.component';
+import { DashboardComponent } from './feature/admin/dashboard/dashboard.component';
 
 export const routes: Routes = [
   // User front-end
@@ -42,6 +43,7 @@ export const routes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [AuthGuard],
     children: [
+     
       { path: 'hero', component: HeroComponent },
       { path: 'about', component: AboutComponent },
       { path: 'projects', component: ProjectsComponent },
@@ -52,7 +54,8 @@ export const routes: Routes = [
       { path: 'contact', component: ContactComponent },
 
       // Redirect bare /admin to hero (or any default dashboard page)
-      { path: '', redirectTo: '', pathMatch: 'full' }
+{ path: '', component: DashboardComponent },
+{ path: 'dashboard', component: DashboardComponent },
     ]
   },
 

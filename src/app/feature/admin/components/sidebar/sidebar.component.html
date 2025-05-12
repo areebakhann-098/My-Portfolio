@@ -1,20 +1,46 @@
+<aside class="text-white pt-5 pb-10 h-full fixed" style="background-color: #2cc2cd;" 
+       [class.w-64]="MenuOpen" [class.w-20]="!MenuOpen">
+  <div class="w-55 m-auto">
+    <div class="flex items-center gap-x-2" [class.justify-between]="MenuOpen">
+      
+      <!-- Logo -->
+      <img [src]="userLogo" alt="Logo" class="w-10 h-10 rounded-full object-cover">
+      
+      <!-- User name (Visible when MenuOpen is true) -->
+      <h3 *ngIf="MenuOpen" class="text-2xl font-medium ml-2 cursor-pointer">{{ userName }}</h3>
 
-   <aside class="w-64 bg-white shadow-lg p-6 fixed h-full">
-    <div class="flex items-center gap-3 mb-10">
-      <img [src]="userLogo" alt="Logo" class="rounded-full w-10 h-10" />
-      <h2 class="text-lg font-bold">{{ userName }}</h2>
+      <!-- Toggle Button -->
+      <button (click)="menuToggle()" [class.ml-auto]="MenuOpen" class="shrink-0 cursor-pointer">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
     </div>
-  
-    <nav class="flex flex-col gap-4 text-gray-700 font-medium">
-      <a
-        *ngFor="let link of links"
-        [routerLink]="link.path"
-        class="hover:text-blue-600"
-      >
-      <mat-icon class="mr-4">{{ link.icon }}</mat-icon>
 
-        {{ link.label }}
-      </a>
-    </nav>
-  </aside>
-  
+    <!-- Profile section -->
+    <div class="flex items-center space-x-1 mt-7 gap-x-4">
+      
+      <!-- Profile name and role (Visible when MenuOpen is true) -->
+      <div *ngIf="MenuOpen">
+      </div>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebarMenu">
+      <nav>
+        <ul class="flex flex-col gap-y-7">
+          <li *ngFor="let option of sideBarOpation" class="w-full ms-2 h-7 rounded flex items-center">
+            <i class="material-icons text-sm mr-2">{{ option.icon }}</i>
+
+            <!-- Menu Item Link (Visible when MenuOpen is true) -->
+            <a *ngIf="MenuOpen" [routerLink]="option.route"
+               class="ps-1 items-center w-full h-7 hover:rounded cursor-pointer">
+              {{ option.label }}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</aside>

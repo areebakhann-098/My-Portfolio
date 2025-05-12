@@ -1,0 +1,20 @@
+
+<!-- Dashboard Grid Section (existing) -->
+<mat-grid-list class="mt-4" cols="3" rowHeight="150px" gutterSize="16px">
+  <mat-grid-tile
+    *ngFor="let section of sections"
+    [style.background]="section.color"
+    class="cursor-pointer hover:brightness-110 transition"
+  >
+    <div class="flex flex-col justify-center items-center h-full gap-2">
+      <mat-icon class="text-4xl">{{ section.icon }}</mat-icon>
+      <h3 class="text-xl font-semibold">{{ section.title }}</h3>
+      <p class="text-md" *ngIf="section.count !== undefined">{{ section.count }}</p>
+      <p class="text-sm" *ngIf="section.info">{{ section.info }}</p>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+  <!-- Chart Container -->
+ <div class="mt-10 ml-5 mr-5 flex justify-center">
+  <canvas id="myChart" class="w-60 h-40" width="240" height="160"></canvas>
+</div>

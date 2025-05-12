@@ -34,6 +34,10 @@
             {{ submittedProfile[field.controlName] || 'N/A' }}
           </p>
         </div>
+          <!-- Delete Button -->
+        <div class="text-right">
+          <button mat-raised-button color="warn" (click)="deleteProfile()">Delete Profile</button>
+        </div>
       </div>
     </mat-tab>
   </mat-tab-group>

@@ -11,39 +11,33 @@
 
     <!-- Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div *ngFor="let project of visibleProjects; let i = index" class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div *ngFor="let project of visibleProjects()" class="bg-white rounded-xl shadow-md overflow-hidden">
         <img [src]="project.imageUrl" alt="Portfolio Image" class="w-full h-auto object-cover">
         <div class="p-5">
           <p class="text-xs text-gray-400 uppercase">{{ project.category }}</p>
           <h3 class="text-lg font-semibold mt-1">{{ project.title }}</h3>
-          <!-- <p class="text-sm text-gray-500 mt-2">
-            {{ project.description }}
-          </p> -->
 
-        <!-- View Project Button -->
-         
-        <a [href]="project.projectLink" target="_blank"
-        class="mt-4 mr-2 inline-block px-4 py-1 border border-purple-600 text-purple-600 text-sm rounded-full hover:bg-purple-600 hover:text-white transition">
-        Project Link →
-     </a>
-     
-<a [routerLink]="['/project-detail', project.id]" class="px-4 py-1 border border-purple-600 text-purple-600 text-sm rounded-full hover:bg-purple-600 hover:text-white transition">
-  View Details →
-</a>
+          <!-- Project Link Button -->
+          <a [href]="project.projectLink" target="_blank"
+             class="mt-4 mr-2 inline-block px-4 py-1 border border-purple-600 text-purple-600 text-sm rounded-full hover:bg-purple-600 hover:text-white transition">
+            Project Link →
+          </a>
 
-
-
-
+          <!-- View Details Router Button -->
+          <a [routerLink]="['/project-detail', project.id]"
+             class="px-4 py-1 border border-purple-600 text-purple-600 text-sm rounded-full hover:bg-purple-600 hover:text-white transition">
+            View Details →
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- More Project Button -->
+    <!-- Toggle Projects Button -->
     <div class="mt-12 text-center">
       <button (click)="toggleProjects()" class="bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 transition">
-        {{ showAll ? 'Show Less' : 'More Projects' }}
+        {{ showAll() ? 'Show Less' : 'More Projects' }}
       </button>
     </div>
-    
+
   </section>
 </div>

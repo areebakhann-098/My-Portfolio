@@ -44,7 +44,17 @@
           <h2 class="text-xl font-bold">{{ service.title }}</h2>
           <p>{{ service.description }}</p>
         </div>
+           <!-- Delete Button -->
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="deleteService(service.id)"
+      class="mt-2"
+    >
+      Delete
+    </button>
       </div>
+     
     </mat-tab>
   </mat-tab-group>
 </section>

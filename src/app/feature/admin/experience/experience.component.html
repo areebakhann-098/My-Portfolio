@@ -69,6 +69,11 @@
           <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm" [ngClass]="exp.badgeClass">
             {{ exp.fromDate | date:'MMM yyyy' }} - {{ exp.toDate | date:'MMM yyyy' }}
           </span>
+
+          <!-- Delete Button -->
+          <button mat-button color="warn" (click)="deleteExperience(exp.id)">
+            Delete
+          </button>
         </div>
       </div>
     </mat-tab>

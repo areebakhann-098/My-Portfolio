@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FirebaseService } from '../../../admin/Firebase/firebase-service.service';
@@ -11,8 +11,13 @@ import { FirebaseService } from '../../../admin/Firebase/firebase-service.servic
   styleUrls: ['./projects.component.css']
 })
 export class ProjectsComponent implements OnInit {
-  showAll = false;
-  projects = signal<any[]>([]); // Angular Signal
+  showAll = signal(false);
+  projects = signal<any[]>([]);
+
+  // Computed signal to update visible projects based on showAll
+  visibleProjects = computed(() =>
+    this.showAll() ? this.projects() : this.projects().slice(0, 3)
+  );
 
   constructor(private firebaseService: FirebaseService, private router: Router) {}
 
@@ -22,12 +27,8 @@ export class ProjectsComponent implements OnInit {
     });
   }
 
-  get visibleProjects() {
-    return this.showAll ? this.projects() : this.projects().slice(0, 6);
-  }
-
   toggleProjects() {
-    this.showAll = !this.showAll;
+    this.showAll.set(!this.showAll());
   }
 
   goToDetails(project: any) {

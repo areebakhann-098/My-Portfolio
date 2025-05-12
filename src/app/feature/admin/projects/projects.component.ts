@@ -118,4 +118,20 @@ export class ProjectsComponent implements OnInit {
       alert('Please fill all fields and upload an image.');
     }
   }
+  deleteProject(projectId: string): void {
+  const confirmDelete = confirm('Are you sure you want to delete this project?');
+  if (!confirmDelete) return;
+
+  this.firebaseService.deleteDocument('projects', projectId).subscribe({
+    next: () => {
+      alert('Project deleted successfully.');
+      this.loadProjects();
+    },
+    error: (err) => {
+      console.error('Error deleting project:', err);
+      alert('Failed to delete project.');
+    }
+  });
+}
+
 }

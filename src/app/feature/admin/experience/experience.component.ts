@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -43,6 +42,10 @@ export class ExperienceComponent implements OnInit {
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
+    this.fetchExperienceData();
+  }
+
+  fetchExperienceData(): void {
     this.firebaseService.getDocuments('Experience').subscribe({
       next: (data) => this.experienceList = data,
       error: (err) => console.error('Error fetching experience data:', err)
@@ -86,6 +89,7 @@ export class ExperienceComponent implements OnInit {
             this.experienceForm.reset();
             this.previewImage = null;
             this.selectedImage = null;
+            this.fetchExperienceData(); // Refresh the experience data
           },
           error: (err) => {
             this.isSubmitting = false;
@@ -97,6 +101,21 @@ export class ExperienceComponent implements OnInit {
       reader.readAsDataURL(this.selectedImage);
     } else {
       alert('Please fill out all fields and select an image.');
+    }
+  }
+
+  deleteExperience(id: string): void {
+    if (confirm('Are you sure you want to delete this experience?')) {
+      this.firebaseService.deleteDocument('Experience', id).subscribe({
+        next: () => {
+          alert('Experience deleted successfully!');
+          this.fetchExperienceData(); // Refresh the experience list
+        },
+        error: (err) => {
+          alert('Error deleting experience.');
+          console.error(err);
+        }
+      });
     }
   }
 }

@@ -1,14 +1,20 @@
-@media (max-width: 1024px) {
-    :host {
-      position: absolute;
-      z-index: 50;
-      width: 16rem; /* 64 */
-      transform: translateX(-100%);
-      transition: transform 0.3s ease-in-out;
-    }
-  
-    :host-context(.sidebar-open) {
-      transform: translateX(0);
-    }
-  }
-  
+/* sidebar.component.css */
+aside {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+aside .flex {
+  transition: all 0.3s ease;
+}
+
+aside .w-64 {
+  width: 16rem;  /* When MenuOpen is true */
+}
+
+aside .w-20 {
+  width: 5rem;  /* When MenuOpen is false */
+}

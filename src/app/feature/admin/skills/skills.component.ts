@@ -94,4 +94,18 @@ export class SkillsComponent implements OnInit {
       alert('Please fill all fields and select an image.');
     }
   }
+  deleteSkill(skillId: string): void {
+  if (confirm('Are you sure you want to delete this skill?')) {
+    this.firebaseService.deleteDocument('SkillsInfo', skillId).subscribe({
+      next: () => {
+        this.skillsDataList = this.skillsDataList.filter(skill => skill.id !== skillId);
+        alert('Skill deleted successfully.');
+      },
+      error: () => {
+        alert('Error deleting skill.');
+      }
+    });
+  }
+}
+
 }

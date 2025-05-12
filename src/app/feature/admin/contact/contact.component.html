@@ -27,6 +27,13 @@
           <th mat-header-cell *matHeaderCellDef> Message </th>
           <td mat-cell *matCellDef="let contact"> {{ contact.message }} </td>
         </ng-container>
+       <ng-container matColumnDef="delete">
+  <th mat-header-cell *matHeaderCellDef> Actions </th>
+  <td mat-cell *matCellDef="let contact">
+    <button mat-button class="delete-btn" (click)="deleteContact(contact.id)">Delete</button>
+  </td>
+</ng-container>
+
   
         <!-- Header and Row Definitions -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

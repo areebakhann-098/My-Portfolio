@@ -59,4 +59,18 @@ export class ServicesComponent {
       alert('There was an error fetching the services.');
     });
   }
+  deleteService(serviceId: string): void {
+  if (confirm('Are you sure you want to delete this service?')) {
+    this.firebaseService.deleteDocument('services', serviceId).subscribe({
+      next: () => {
+        this.servicesList = this.servicesList.filter(service => service.id !== serviceId);
+        alert('Service deleted successfully.');
+      },
+      error: () => {
+        alert('Error deleting service.');
+      }
+    });
+  }
+}
+
 }

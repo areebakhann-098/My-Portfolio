@@ -115,4 +115,19 @@ export class AboutComponent implements OnInit {
       },
     });
   }
+  deleteAboutData(id: string): void {
+  if (confirm('Are you sure you want to delete this about info?')) {
+    this.firebaseService.deleteDocument('about', id).subscribe({
+      next: () => {
+        alert('About info deleted successfully.');
+        this.getAboutData(); // Refresh list after deletion
+      },
+      error: (error) => {
+        console.error('Error deleting about info:', error);
+        alert('Failed to delete about info.');
+      }
+    });
+  }
+}
+
 }

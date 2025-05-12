@@ -71,6 +71,15 @@
           <p>{{ skill.description }}</p>
           <p><strong>Image Title:</strong> {{ skill.imageTitle }}</p>
         </div>
+         <!-- Delete Button -->
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="deleteSkill(skill.id)"
+      class="mt-2"
+    >
+      Delete
+    </button>
       </div>
     </mat-tab>
   </mat-tab-group>

@@ -17,6 +17,7 @@ export interface AboutData {
     profileImageUrl: string;
     cvFileUrl: string;
   }
+ 
   
   
 

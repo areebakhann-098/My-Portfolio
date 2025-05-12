@@ -14,7 +14,23 @@ export class NavbarComponent {
   userName = 'Areeba Khalid';
   userAvatar = 'assets/logoo.jpg';
 
+  isMenuOpen = false;
+
+  profileOpation = [
+    { label: 'Profile', icon: 'person', route: '/admin/profile' },
+    { label: 'Settings', icon: 'settings', route: '/admin/settings' },
+    { label: 'Logout', icon: 'logout', route: '/logout' },
+  ];
+
   onToggleClick() {
     this.toggle.emit();
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+    this.isMenuOpen = false;
   }
 }

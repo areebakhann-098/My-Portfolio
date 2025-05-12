@@ -117,4 +117,20 @@ export class HeroComponent {
       alert('Please fill all required fields and select an image')
     }
   }
+    // Method to delete hero data
+  deleteHero(heroId: string): void {
+    if (confirm('Are you sure you want to delete this hero info?')) {
+      this.firebaseService.deleteDocument('HeroInfo', heroId).subscribe({
+        next: () => {
+          alert('Hero information deleted successfully!');
+          this.heroDataList = this.heroDataList.filter(hero => hero.id !== heroId); // Update the local list
+        },
+        error: (err) => {
+          console.error('Error deleting hero data:', err);
+          alert('Error deleting hero data.');
+        }
+      });
+
+    }
+  }
 }
