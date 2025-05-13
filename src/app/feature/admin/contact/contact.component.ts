@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { FirebaseService } from '../Firebase/firebase-service.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-contact',
@@ -10,13 +11,31 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
   templateUrl: './contact.component.html',
 })
 export class ContactComponent implements OnInit {
-  // Add 'delete' to the displayedColumns array
-  displayedColumns: string[] = ['fullName', 'email', 'subject', 'message', 'delete']; 
+  displayedColumns: string[] = ['fullName', 'email', 'subject', 'message', 'delete'];
   contactList: any[] = [];
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(
+    private firebaseService: FirebaseService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const contactId = params['id'];
+      const state = history.state;
+
+      if (contactId && state.singleContact) {
+        // If a specific contact ID and state is provided
+        this.contactList = [state.singleContact];
+      } else {
+        // Load all contacts
+        this.loadAllContacts();
+      }
+    });
+  }
+
+  loadAllContacts() {
     this.firebaseService.getDocuments('contacts').subscribe({
       next: (data) => {
         this.contactList = data;

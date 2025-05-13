@@ -66,11 +66,26 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  goToContactPage() {
-    this.router.navigate(['/admin/contact']);
-  }
-  viewSingleContact(contact: any) {
-  this.router.navigate(['/admin/contact'], { state: { singleContact: contact } });
+viewSingleContact(contact: any) {
+  this.router.navigate(['/admin/contact'], {
+    queryParams: { id: contact.id },
+    state: { singleContact: contact }
+  });
 }
+
+
+viewAllContacts() {
+  this.router.navigate(['/admin/contact'], {
+    queryParams: {}  // clears the 'id' param so all contacts will be shown
+  });
+}
+
+goToContactPage() {
+  this.router.navigate(['/admin/contact'], {
+    queryParams: {},
+    state: {}
+  });
+}
+
 
 }

@@ -6,15 +6,17 @@
 
   <div class="flex items-center gap-6">
       <!-- notification icon with dynamic badge -->
-<mat-icon 
-  [matBadge]="contactCount" 
-  matBadgeColor="warn" 
+<mat-icon
+  [matBadge]="contactCount"
+  matBadgeColor="warn"
   matBadgeOverlap="false"
   [matMenuTriggerFor]="contactMenu"
   style="cursor: pointer;"
+  aria-hidden="false"
 >
   notifications
 </mat-icon>
+
 
 <!-- dropdown menu showing latest contacts -->
 <mat-menu #contactMenu="matMenu">
