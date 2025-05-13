@@ -10,7 +10,7 @@ import { RouterLink } from '@angular/router';
 })
 export class SidebarComponent {
   MenuOpen = true;  // Set default state to open
-  userLogo = 'assets/images/profile5.jpg';  // Path to logo image
+  userLogo = 'assets/images/logo1.jpg';  // Path to logo image
   userImage = 'assets/images/selfi.jpeg';  // Path to user profile image
   userName = 'Areeba';
   

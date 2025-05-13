@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environment'; // Adjust path if needed
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, QuerySnapshot, DocumentData } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc,  updateDoc,
+ deleteDoc, doc, QuerySnapshot, DocumentData } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { Observable, from } from 'rxjs';
@@ -15,7 +16,7 @@ export class FirebaseService {
   private db;
   private storage;
   private auth;
-
+private authKey = 'isLoggedIn';
   constructor() {
     // Initialize Firebase App
     this.app = initializeApp(environment.firebaseConfig);
@@ -91,12 +92,23 @@ export class FirebaseService {
       })
     );
   }
+  // ✅ Update Document by ID
+updateDocument(collectionName: string, docId: string, data: any): Observable<any> {
+  const docRef = doc(this.db, collectionName, docId);
+  return from(updateDoc(docRef, data)).pipe(
+    map(() => ({
+      success: true,
+      message: `Document with ID ${docId} updated.`,
+    })),
+    catchError((error) => {
+      console.error('Error updating document:', error);
+      throw error;
+    })
+  );
+}
 
-  // ✅ Check if user is authenticated
-  isAuthenticated(): boolean {
-    const user = this.auth.currentUser;
-    return !!user; // true if logged in
-  }
+
+
 
   // ✅ Monitor authentication state
   checkAuthState() {
@@ -111,11 +123,12 @@ export class FirebaseService {
     });
   }
 
-  // ✅ Logout
-  logout(): void {
-    // Clear the 'isLoggedIn' flag in localStorage
-    localStorage.removeItem('isLoggedIn');
-    // Optionally, sign out from Firebase Authentication
-    signOut(this.auth);
+logout(): void {
+    localStorage.removeItem(this.authKey);
   }
+ 
+  isAuthenticated(): boolean {
+    return localStorage.getItem(this.authKey) === 'true';
+  }
+  
 }

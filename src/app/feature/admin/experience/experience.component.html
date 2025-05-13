@@ -59,23 +59,20 @@
         No experience data found.
       </div>
 
-      <div *ngFor="let exp of experienceList" class="max-w-2xl mx-auto mt-6">
-        <div class="bg-white rounded-xl shadow-md p-4">
-          <img *ngIf="exp.image" [src]="exp.image" class="w-full h-48 object-cover rounded mb-4" />
-          <h2 class="text-xl font-bold">{{ exp.title }}</h2>
-          <p>{{ exp.description }}</p>
-          <p><strong>From:</strong> {{ exp.fromDate | date:'mediumDate' }}</p>
-          <p><strong>To:</strong> {{ exp.toDate | date:'mediumDate' }}</p>
-          <span class="inline-block mt-2 px-3 py-1 rounded-full text-sm" [ngClass]="exp.badgeClass">
-            {{ exp.fromDate | date:'MMM yyyy' }} - {{ exp.toDate | date:'MMM yyyy' }}
-          </span>
+     <!-- Experience list -->
+<div *ngFor="let experience of experienceList" class="p-4 bg-white rounded shadow mb-4">
+  <img *ngIf="experience.image" [src]="experience.image" class="w-full h-64 object-cover rounded mb-2" />
+  <h2 class="text-xl font-bold">{{ experience.title }}</h2>
+  <p>{{ experience.description }}</p>
+  <p><strong>From:</strong> {{ experience.fromDate?.toDate?.() || experience.fromDate | date }}</p>
+  <p><strong>To:</strong> {{ experience.toDate?.toDate?.() || experience.toDate | date }}</p>
+  <p><strong>Badge Class:</strong> {{ experience.badgeClass }}</p>
 
-          <!-- Delete Button -->
-          <button mat-button color="warn" (click)="deleteExperience(exp.id)">
-            Delete
-          </button>
-        </div>
-      </div>
-    </mat-tab>
-  </mat-tab-group>
-</section>
+  <div class="flex gap-2 mt-3 justify-end">
+    <button mat-button color="accent" (click)="editExperience(experience)">Edit</button>
+    <button mat-button color="warn" (click)="deleteExperience(experience.id)">Delete</button>
+  </div>
+</div>
+
+
+

@@ -22,11 +22,8 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
 })
 export class SkillsComponent implements OnInit {
   skillsForm = new FormGroup({
-    // title: new FormControl('', Validators.required),
-    // description: new FormControl('', Validators.required),
     imageTitle: new FormControl('', Validators.required),
     image: new FormControl<File | null>(null),
-   
   });
 
   previewImage: string | ArrayBuffer | null = null;
@@ -34,9 +31,16 @@ export class SkillsComponent implements OnInit {
   skillsDataList: any[] = [];
   isSubmitting = false;
 
+  isEditMode = false;
+  selectedSkillId: string | null = null;
+
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
+    this.fetchSkills();
+  }
+
+  fetchSkills(): void {
     this.firebaseService.getDocuments('SkillsInfo').subscribe({
       next: (data) => this.skillsDataList = data,
       error: (err) => console.error('Error fetching skills data:', err)
@@ -58,54 +62,82 @@ export class SkillsComponent implements OnInit {
   }
 
   async submitSkillsForm(): Promise<void> {
-    if (this.skillsForm.valid && this.selectedImage) {
-      this.isSubmitting = true;
+    if (this.skillsForm.invalid || (!this.selectedImage && !this.previewImage)) {
+      alert('Please fill all fields and select an image.');
+      return;
+    }
 
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (this.selectedImage.size > maxSize) {
-        this.isSubmitting = false;
-        alert('Image size exceeds 5MB limit.');
-        return;
-      }
+    this.isSubmitting = true;
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const formData = {
-          ...this.skillsForm.value,
-          image: reader.result
-        };
+    const maxSize = 5 * 1024 * 1024;
+    if (this.selectedImage && this.selectedImage.size > maxSize) {
+      alert('Image size exceeds 5MB limit.');
+      this.isSubmitting = false;
+      return;
+    }
 
-        this.firebaseService.addDocument('SkillsInfo', formData).subscribe({
-          next: () => {
-            this.isSubmitting = false;
-            alert('Skill data added successfully!');
-            this.skillsForm.reset();
-            this.previewImage = null;
-            this.selectedImage = null;
-          },
-          error: () => {
-            this.isSubmitting = false;
-            alert('Error adding skill data.');
-          }
-        });
+    const handleFormSubmit = (base64Image: string | ArrayBuffer | null) => {
+      const formData = {
+        imageTitle: this.skillsForm.value.imageTitle,
+        image: base64Image
       };
+
+      const request$ = this.isEditMode && this.selectedSkillId
+        ? this.firebaseService.updateDocument('SkillsInfo', this.selectedSkillId, formData)
+        : this.firebaseService.addDocument('SkillsInfo', formData);
+
+      request$.subscribe({
+        next: () => {
+          alert(`Skill ${this.isEditMode ? 'updated' : 'added'} successfully!`);
+          this.resetForm();
+          this.fetchSkills();
+          this.isSubmitting = false;
+        },
+        error: () => {
+          alert(`Error ${this.isEditMode ? 'updating' : 'adding'} skill.`);
+          this.isSubmitting = false;
+        }
+      });
+    };
+
+    if (this.selectedImage) {
+      const reader = new FileReader();
+      reader.onload = () => handleFormSubmit(reader.result);
       reader.readAsDataURL(this.selectedImage);
     } else {
-      alert('Please fill all fields and select an image.');
+      handleFormSubmit(this.previewImage);
     }
   }
-  deleteSkill(skillId: string): void {
-  if (confirm('Are you sure you want to delete this skill?')) {
-    this.firebaseService.deleteDocument('SkillsInfo', skillId).subscribe({
-      next: () => {
-        this.skillsDataList = this.skillsDataList.filter(skill => skill.id !== skillId);
-        alert('Skill deleted successfully.');
-      },
-      error: () => {
-        alert('Error deleting skill.');
-      }
-    });
-  }
-}
 
+  editSkill(skill: any): void {
+    this.isEditMode = true;
+    this.selectedSkillId = skill.id;
+    this.skillsForm.patchValue({
+      imageTitle: skill.imageTitle,
+      image: null // Reset image file input
+    });
+    this.previewImage = skill.image;
+  }
+
+  deleteSkill(skillId: string): void {
+    if (confirm('Are you sure you want to delete this skill?')) {
+      this.firebaseService.deleteDocument('SkillsInfo', skillId).subscribe({
+        next: () => {
+          this.skillsDataList = this.skillsDataList.filter(skill => skill.id !== skillId);
+          alert('Skill deleted successfully.');
+        },
+        error: () => {
+          alert('Error deleting skill.');
+        }
+      });
+    }
+  }
+
+  resetForm(): void {
+    this.skillsForm.reset();
+    this.previewImage = null;
+    this.selectedImage = null;
+    this.isEditMode = false;
+    this.selectedSkillId = null;
+  }
 }

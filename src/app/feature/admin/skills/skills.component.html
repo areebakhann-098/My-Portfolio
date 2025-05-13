@@ -48,17 +48,17 @@
 
         
 
-          <!-- Submit Button -->
+           <!-- Submit Button -->
           <div class="text-right mt-4">
-            <button mat-raised-button color="primary" type="submit">
-              Submit
+            <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+              {{ isEditMode ? 'Update Skill' : 'Add Skill' }}
             </button>
           </div>
         </form>
       </div>
     </mat-tab>
 
-    <!-- See Skills Info Tab -->
+     <!-- See Skills Info Tab -->
     <mat-tab label="See Skills Info">
       <div *ngIf="skillsDataList.length === 0" class="mt-6 text-center text-gray-500">
         No skills added yet...
@@ -67,19 +67,25 @@
       <div *ngFor="let skill of skillsDataList" class="max-w-2xl mx-auto mt-6">
         <div class="bg-white rounded-xl shadow-md p-4 space-y-2">
           <img *ngIf="skill.image" [src]="skill.image" class="w-full h-48 object-cover rounded" />
-          <h2 class="text-xl font-bold">{{ skill.title }}</h2>
-          <p>{{ skill.description }}</p>
-          <p><strong>Image Title:</strong> {{ skill.imageTitle }}</p>
+          <p class="text-lg font-semibold"><strong>Image Title:</strong> {{ skill.imageTitle }}</p>
+
+          <div class="flex gap-3 mt-4">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="editSkill(skill)"
+            >
+              Edit
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="deleteSkill(skill.id)"
+            >
+              Delete
+            </button>
+          </div>
         </div>
-         <!-- Delete Button -->
-    <button
-      mat-raised-button
-      color="warn"
-      (click)="deleteSkill(skill.id)"
-      class="mt-2"
-    >
-      Delete
-    </button>
       </div>
     </mat-tab>
   </mat-tab-group>

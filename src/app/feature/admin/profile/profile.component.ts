@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FirebaseService } from '../Firebase/firebase-service.service';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -20,8 +21,13 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
   ],
   templateUrl: './profile.component.html'
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
   submittedProfile: any = null;
+  selectedTabIndex = 1; // Default to "See Profile Info" when opened from navbar
+isEditMode = false;
+  isSubmitting = false;
+
+profileDocId: string | null=null;
 
   fields = [
     { controlName: 'name', label: 'Name', type: 'text', placeholder: 'Enter your name' },
@@ -47,59 +53,86 @@ export class ProfileComponent {
     fiverr: new FormControl('')
   });
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
-  submitForm() {
-    if (this.profileForm.valid) {
-      this.submittedProfile = this.profileForm.value;
-      console.log('Profile Data:', this.submittedProfile);
+  ngOnInit() {
+    this.fetchProfileData();
+  // If navigated with viewProfileOnly flag from navbar
+  const viewProfileOnly = history.state['viewProfileOnly'];
+  if (viewProfileOnly) {
+    this.selectedTabIndex = 1; // Go to "See Profile Info" tab
+  }
+}
 
-      // Save to Firestore using FirebaseService
-      this.firebaseService.addDocument('profiles', this.submittedProfile).subscribe(
+submitForm() {
+  if (this.profileForm.valid) {
+    const profileData = this.profileForm.value;
+
+    if (this.isEditMode && this.profileDocId) {
+      // Update existing profile
+      this.firebaseService.updateDocument('profiles', this.profileDocId, profileData).subscribe(
         (response) => {
-          console.log('Profile data saved to Firestore:', response);
-          // Fetch updated profile after submission
+          console.log('Profile updated:', response);
+          this.isEditMode = false;
+          this.profileForm.reset();
           this.fetchProfileData();
+          this.selectedTabIndex = 1; // Go to see profile
         },
         (error) => {
-          console.error('Error saving profile data:', error);
+          console.error('Update error:', error);
         }
       );
-
-      // Optionally, you can reset the form here
-      this.profileForm.reset();
+    } else {
+      // Add new profile
+      this.firebaseService.addDocument('profiles', profileData).subscribe(
+        (response) => {
+          console.log('Profile saved:', response);
+          this.profileForm.reset();
+          this.fetchProfileData();
+          this.selectedTabIndex = 1;
+        },
+        (error) => {
+          console.error('Add error:', error);
+        }
+      );
     }
   }
+}
 
-  // Retrieve profile data from Firestore
+
   fetchProfileData() {
     this.firebaseService.getDocuments('profiles').subscribe(
       (profiles) => {
         if (profiles.length > 0) {
-          this.submittedProfile = profiles[0];  // Assuming only one profile is present
+          this.submittedProfile = profiles[0];
+        this.profileDocId = profiles[0]['id'];
         }
       },
       (error) => {
-        console.error('Error fetching profile data:', error);
+        console.error('Fetch error:', error);
       }
     );
   }
-    // Delete profile data from Firestore
+
   deleteProfile() {
     if (this.submittedProfile) {
       this.firebaseService.deleteDocument('profiles', this.submittedProfile.id).subscribe(
         () => {
-          console.log('Profile deleted from Firestore');
-          this.submittedProfile = null;  // Clear the profile data after deletion
+          this.submittedProfile = null;
         },
         (error) => {
-          console.error('Error deleting profile:', error);
+          console.error('Delete error:', error);
         }
+
       );
     }
   }
-
-  ngOnInit() {
-    this.fetchProfileData();  // Fetch profile data on component initialization
+  editProfile() {
+  if (this.submittedProfile) {
+    this.profileForm.patchValue(this.submittedProfile); // Fill form with data
+    this.isEditMode = true;
+    this.selectedTabIndex = 0; // Switch to form tab
   }
+}
+
 }

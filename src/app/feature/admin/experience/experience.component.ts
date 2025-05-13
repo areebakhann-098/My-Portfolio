@@ -31,13 +31,15 @@ export class ExperienceComponent implements OnInit {
     fromDate: new FormControl('', Validators.required),
     toDate: new FormControl('', Validators.required),
     badgeClass: new FormControl('', Validators.required),
-    image: new FormControl<File | null>(null),
+    image: new FormControl<string | null>(null),
   });
 
   experienceList: any[] = [];
   previewImage: string | ArrayBuffer | null = null;
   selectedImage: File | null = null;
   isSubmitting = false;
+  isEditMode = false;
+  selectedExperienceId: string | null = null;
 
   constructor(private firebaseService: FirebaseService) {}
 
@@ -59,49 +61,61 @@ export class ExperienceComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = () => {
         this.previewImage = reader.result;
-        this.experienceForm.patchValue({ image: file });
-        this.experienceForm.get('image')?.updateValueAndValidity();
+        this.experienceForm.patchValue({ image: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
   }
 
   submitExperienceForm(): void {
-    if (this.experienceForm.valid && this.selectedImage) {
-      this.isSubmitting = true;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        const formValue = this.experienceForm.value;
-        const experienceData = {
-          title: formValue.title,
-          description: formValue.description,
-          fromDate: new Date(formValue.fromDate!),  
-          toDate: new Date(formValue.toDate!),
-          badgeClass: formValue.badgeClass,
-          image: reader.result
-        };
-
-        this.firebaseService.addDocument('Experience', experienceData).subscribe({
-          next: () => {
-            this.isSubmitting = false;
-            alert('Experience added successfully!');
-            this.experienceForm.reset();
-            this.previewImage = null;
-            this.selectedImage = null;
-            this.fetchExperienceData(); // Refresh the experience data
-          },
-          error: (err) => {
-            this.isSubmitting = false;
-            alert('Error adding experience.');
-            console.error(err);
-          }
-        });
-      };
-      reader.readAsDataURL(this.selectedImage);
-    } else {
-      alert('Please fill out all fields and select an image.');
+    if (this.experienceForm.invalid) {
+      alert('Please fill all required fields.');
+      return;
     }
+
+    this.isSubmitting = true;
+
+    const formValue = this.experienceForm.value;
+    const experienceData = {
+      title: formValue.title,
+      description: formValue.description,
+      fromDate: new Date(formValue.fromDate!),
+      toDate: new Date(formValue.toDate!),
+      badgeClass: formValue.badgeClass,
+      image: formValue.image,
+    };
+
+    const action$ = this.isEditMode && this.selectedExperienceId
+      ? this.firebaseService.updateDocument('Experience', this.selectedExperienceId, experienceData)
+      : this.firebaseService.addDocument('Experience', experienceData);
+
+    action$.subscribe({
+      next: () => {
+        alert(`Experience ${this.isEditMode ? 'updated' : 'added'} successfully!`);
+        this.resetForm();
+        this.fetchExperienceData();
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        alert(`Error ${this.isEditMode ? 'updating' : 'adding'} experience.`);
+        console.error(err);
+        this.isSubmitting = false;
+      }
+    });
+  }
+
+  editExperience(experience: any): void {
+    this.isEditMode = true;
+    this.selectedExperienceId = experience.id;
+    this.previewImage = experience.image;
+    this.experienceForm.patchValue({
+      title: experience.title,
+      description: experience.description,
+      fromDate: experience.fromDate.toDate ? experience.fromDate.toDate() : experience.fromDate,
+      toDate: experience.toDate.toDate ? experience.toDate.toDate() : experience.toDate,
+      badgeClass: experience.badgeClass,
+      image: experience.image
+    });
   }
 
   deleteExperience(id: string): void {
@@ -109,7 +123,7 @@ export class ExperienceComponent implements OnInit {
       this.firebaseService.deleteDocument('Experience', id).subscribe({
         next: () => {
           alert('Experience deleted successfully!');
-          this.fetchExperienceData(); // Refresh the experience list
+          this.fetchExperienceData();
         },
         error: (err) => {
           alert('Error deleting experience.');
@@ -117,5 +131,13 @@ export class ExperienceComponent implements OnInit {
         }
       });
     }
+  }
+
+  resetForm(): void {
+    this.experienceForm.reset();
+    this.previewImage = null;
+    this.selectedImage = null;
+    this.isEditMode = false;
+    this.selectedExperienceId = null;
   }
 }

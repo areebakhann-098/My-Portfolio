@@ -16,7 +16,7 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatTabsModule
+    MatTabsModule,
   ],
   templateUrl: './services.component.html',
 })
@@ -27,50 +27,91 @@ export class ServicesComponent {
   });
 
   servicesList: any[] = [];
+  isEditMode = false;
+  currentEditId: string | null = null;
 
   constructor(private firebaseService: FirebaseService) {
-    // Fetch services when component is initialized
     this.fetchServices();
   }
 
-  // Submit the form and add data to Firebase
+  // Submit form to add or update
   submitServicesForm() {
-    if (this.servicesForm.valid) {
-      const formValue = this.servicesForm.value;
-      this.firebaseService.addDocument('services', formValue).subscribe(() => {
-        this.fetchServices();  // Reload the services after adding
-        this.servicesForm.reset();
-        alert('Service info added successfully!');
-      }, error => {
-        console.error('Error adding service:', error);
-        alert('There was an error adding the service.');
+    if (this.servicesForm.invalid) {
+      alert('Form is invalid!');
+      return;
+    }
+
+    const formValue = this.servicesForm.value;
+
+    if (this.isEditMode && this.currentEditId) {
+      // Update mode
+      this.firebaseService.updateDocument('services', this.currentEditId, formValue).subscribe({
+        next: () => {
+          this.fetchServices();
+          this.servicesForm.reset();
+          this.isEditMode = false;
+          this.currentEditId = null;
+          alert('Service updated successfully!');
+        },
+        error: (err) => {
+          console.error('Error updating service:', err);
+          alert('Error updating service.');
+        }
       });
     } else {
-      alert('Form is invalid!');
+      // Add mode
+      this.firebaseService.addDocument('services', formValue).subscribe({
+        next: () => {
+          this.fetchServices();
+          this.servicesForm.reset();
+          alert('Service added successfully!');
+        },
+        error: (err) => {
+          console.error('Error adding service:', err);
+          alert('Error adding service.');
+        }
+      });
     }
   }
 
-  // Fetch services from Firebase
+  // Load all services
   fetchServices() {
-    this.firebaseService.getDocuments('services').subscribe((services: any[]) => {
-      this.servicesList = services;
-    }, error => {
-      console.error('Error fetching services:', error);
-      alert('There was an error fetching the services.');
-    });
-  }
-  deleteService(serviceId: string): void {
-  if (confirm('Are you sure you want to delete this service?')) {
-    this.firebaseService.deleteDocument('services', serviceId).subscribe({
-      next: () => {
-        this.servicesList = this.servicesList.filter(service => service.id !== serviceId);
-        alert('Service deleted successfully.');
-      },
-      error: () => {
-        alert('Error deleting service.');
+    this.firebaseService.getDocuments('services').subscribe({
+      next: (services: any[]) => this.servicesList = services,
+      error: (err) => {
+        console.error('Error fetching services:', err);
+        alert('There was an error fetching the services.');
       }
     });
   }
-}
 
+  // Delete service
+  deleteService(serviceId: string): void {
+    if (confirm('Are you sure you want to delete this service?')) {
+      this.firebaseService.deleteDocument('services', serviceId).subscribe({
+        next: () => {
+          this.servicesList = this.servicesList.filter(service => service.id !== serviceId);
+          alert('Service deleted successfully.');
+        },
+        error: () => alert('Error deleting service.')
+      });
+    }
+  }
+
+  // Enable edit mode and patch form
+  editService(service: any) {
+    this.servicesForm.patchValue({
+      title: service.title,
+      description: service.description
+    });
+    this.isEditMode = true;
+    this.currentEditId = service.id;
+  }
+
+  // Cancel editing
+  cancelEdit() {
+    this.servicesForm.reset();
+    this.isEditMode = false;
+    this.currentEditId = null;
+  }
 }

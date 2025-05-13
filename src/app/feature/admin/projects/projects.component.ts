@@ -25,6 +25,8 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
   templateUrl: './projects.component.html',
 })
 export class ProjectsComponent implements OnInit {
+  selectedProjectId: string | null = null; // For tracking which project is being edited
+
   categoryOptions = ['Web Development', 'Mobile App', 'Machine Learning', 'UI/UX Design'];
 
   projectForm = new FormGroup({
@@ -79,45 +81,68 @@ export class ProjectsComponent implements OnInit {
     }
   }
 
-  async submitProjectForm(): Promise<void> {
-    if (this.projectForm.valid && this.base64Image) {
-      this.isSubmitting = true;
+ async submitProjectForm(): Promise<void> {
+  if (this.projectForm.valid && this.base64Image) {
+    this.isSubmitting = true;
 
-      const formValue = this.projectForm.value;
+    const formValue = this.projectForm.value;
 
-      const technologiesArray = formValue.technologies
-        ? formValue.technologies.split(',').map((tech: string) => tech.trim())
-        : [];
+    const technologiesArray = formValue.technologies
+      ? formValue.technologies.split(',').map((tech: string) => tech.trim())
+      : [];
 
-      const projectData = {
-        title: formValue.title,
-        category: formValue.category,
-        shortDescription: formValue.shortDescription,
-        fullDescription: formValue.fullDescription,
-        imageUrl: formValue.image,
-        technologies: technologiesArray,
-        projectLink: formValue.projectLink // Store project link
-      };
+    const projectData = {
+      title: formValue.title,
+      category: formValue.category,
+      shortDescription: formValue.shortDescription,
+      fullDescription: formValue.fullDescription,
+      imageUrl: formValue.image,
+      technologies: technologiesArray,
+      projectLink: formValue.projectLink
+    };
 
-      this.firebaseService.addDocument('projects', projectData).subscribe({
+    // UPDATE
+    if (this.selectedProjectId) {
+      this.firebaseService.updateDocument('projects', this.selectedProjectId, projectData).subscribe({
         next: () => {
-          this.isSubmitting = false;
-          alert('Project added successfully!');
-          this.loadProjects();
-          this.projectForm.reset();
-          this.imagePreview = null;
-          this.base64Image = null;
+          alert('Project updated successfully!');
+          this.resetForm();
         },
         error: (err) => {
-          this.isSubmitting = false;
           console.error(err);
-          alert('Error saving project.');
+          alert('Error updating project.');
+          this.isSubmitting = false;
         }
       });
     } else {
-      alert('Please fill all fields and upload an image.');
+      // ADD NEW
+      this.firebaseService.addDocument('projects', projectData).subscribe({
+        next: () => {
+          alert('Project added successfully!');
+          this.resetForm();
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error saving project.');
+          this.isSubmitting = false;
+        }
+      });
     }
+  } else {
+    alert('Please fill all fields and upload an image.');
   }
+}
+
+
+resetForm(): void {
+  this.projectForm.reset();
+  this.imagePreview = null;
+  this.base64Image = null;
+  this.isSubmitting = false;
+  this.selectedProjectId = null;
+  this.loadProjects();
+}
+
   deleteProject(projectId: string): void {
   const confirmDelete = confirm('Are you sure you want to delete this project?');
   if (!confirmDelete) return;
@@ -132,6 +157,22 @@ export class ProjectsComponent implements OnInit {
       alert('Failed to delete project.');
     }
   });
+}
+editProject(project: any): void {
+  this.selectedProjectId = project.id;
+
+  this.projectForm.patchValue({
+    title: project.title,
+    category: project.category,
+    shortDescription: project.shortDescription,
+    fullDescription: project.fullDescription,
+    image: project.imageUrl,
+    technologies: project.technologies.join(', '), // convert array to comma-separated string
+    projectLink: project.projectLink
+  });
+
+  this.imagePreview = project.imageUrl;
+  this.base64Image = project.imageUrl;
 }
 
 }

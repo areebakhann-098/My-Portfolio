@@ -26,7 +26,12 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
   templateUrl: './hero.component.html',
 })
 export class HeroComponent {
-  
+
+  editMode = false;
+editingHeroId: string | null = null;
+selectedTabIndex = 0; // 0 = Form Tab, 1 = Data List Tab
+
+
   heroForm = new FormGroup({
     title: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
@@ -71,52 +76,65 @@ export class HeroComponent {
   }
 
   async submitHeroForm(): Promise<void> {
-    if (this.heroForm.valid && this.selectedImage) {
-      this.isSubmitting = true;
-      // Check image size before submitting (example: 5MB limit)
-      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-      if (this.selectedImage.size > maxSize) {
-        this.isSubmitting = false;
-        alert('Image size exceeds the maximum allowed size of 5MB.')
-        return;
-      }
- 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const formData = {
-          ...this.heroForm.value,
-          image: reader.result // Image ko Base64 format me store karna
-        };
- 
-        this.firebaseService.addDocument('HeroInfo', formData).subscribe({
-          next: (docRef) => {
-            this.isSubmitting = false;
-            alert('Introduction data added successfully!');
- 
-            this.heroForm.reset({
-              description: '',
-              title: '',
-              experience:'',
-              clients:'',
-              projectsCompleted:'',
-              image: null
-            });
-            this.previewUrl = null;
-            this.selectedImage = null;
- 
-            console.log('Document added successfully:', docRef);
-          },
-          error: (err) => {
-            this.isSubmitting = false;
-            alert('Error adding introduction data.')
-          }
-        });
-      };
-      reader.readAsDataURL(this.selectedImage);
-    } else {
-      alert('Please fill all required fields and select an image')
-    }
+  if (!this.heroForm.valid) {
+    alert('Please fill all required fields');
+    return;
   }
+
+  this.isSubmitting = true;
+
+  const formValue = { ...this.heroForm.value };
+  const maxSize = 5 * 1024 * 1024;
+
+  const processSubmit = (imageUrl: string | ArrayBuffer | null) => {
+    const formData = { ...formValue, image: imageUrl };
+
+    if (this.editMode && this.editingHeroId) {
+      // === Update flow ===
+      this.firebaseService.updateDocument('HeroInfo', this.editingHeroId, formData).subscribe({
+        next: () => {
+          alert('Hero info updated successfully!');
+          this.resetForm();
+          this.refreshHeroList();
+        },
+        error: () => {
+          this.isSubmitting = false;
+          alert('Error updating hero info');
+        },
+      });
+    } else {
+      // === Add new flow ===
+      this.firebaseService.addDocument('HeroInfo', formData).subscribe({
+        next: () => {
+          alert('Hero info added successfully!');
+          this.resetForm();
+          this.refreshHeroList();
+        },
+        error: () => {
+          this.isSubmitting = false;
+          alert('Error adding hero info');
+        },
+      });
+    }
+  };
+
+  if (this.selectedImage) {
+    if (this.selectedImage.size > maxSize) {
+      this.isSubmitting = false;
+      alert('Image size exceeds the maximum allowed size of 5MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      processSubmit(reader.result);
+    };
+    reader.readAsDataURL(this.selectedImage);
+  } else {
+    processSubmit(this.previewUrl); // Use existing image if none selected
+  }
+}
+
     // Method to delete hero data
   deleteHero(heroId: string): void {
     if (confirm('Are you sure you want to delete this hero info?')) {
@@ -133,4 +151,51 @@ export class HeroComponent {
 
     }
   }
+  
+  editHero(hero: any): void {
+  this.editMode = true;
+  this.editingHeroId = hero.id;
+
+  this.heroForm.patchValue({
+    title: hero.title,
+    description: hero.description,
+    experience: hero.experience,
+    clients: hero.clients,
+    projectsCompleted: hero.projectsCompleted,
+  });
+
+  this.previewUrl = hero.image;
+  this.selectedImage = null;
+
+  this.selectedTabIndex = 0; // 👈 Switch to form tab automatically
+}
+
+resetForm(): void {
+  this.heroForm.reset({
+    title: '',
+    description: '',
+    experience: '',
+    clients: '',
+    projectsCompleted: '',
+    image: null
+  });
+  this.previewUrl = null;
+  this.selectedImage = null;
+  this.isSubmitting = false;
+  this.editMode = false;
+  this.editingHeroId = null;
+}
+
+refreshHeroList(): void {
+  this.firebaseService.getDocuments('HeroInfo').subscribe({
+    next: (data) => {
+      this.heroDataList = data;
+    },
+    error: (err) => {
+      console.error('Error fetching hero data:', err);
+    }
+  });
+}
+
+
 }

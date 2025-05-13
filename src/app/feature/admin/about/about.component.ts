@@ -30,6 +30,7 @@ export class AboutComponent implements OnInit {
   imagePreview: string | ArrayBuffer | null = null;
   base64Image: string | null = null;
   selectedFile: File | null = null;
+  editingAboutId: string | null = null; // Track the editing about ID
 
   aboutForm: FormGroup = new FormGroup({
     title: new FormControl('', Validators.required),
@@ -79,13 +80,13 @@ export class AboutComponent implements OnInit {
     }
   }
 
+  // Method to handle submit, either for add or update
   submitAboutForm(): void {
     if (this.aboutForm.invalid || !this.base64Image) {
       alert('Please fill all required fields and select a photo.');
       return;
     }
 
-    // Since the image is already base64, no need to upload it separately
     const aboutData = {
       title: this.aboutForm.value.title,
       description: this.aboutForm.value.description,
@@ -100,34 +101,80 @@ export class AboutComponent implements OnInit {
       phoneNumber: this.aboutForm.value.phoneNumber,
     };
 
-    this.firebaseService.addDocument('about', aboutData).subscribe({
-      next: () => {
-        alert('About info saved successfully!');
-        this.aboutForm.reset();
-        this.imagePreview = null;
-        this.base64Image = null;
-        this.selectedFile = null;
-        this.getAboutData();
-      },
-      error: (err) => {
-        console.error('Error saving about info:', err);
-        alert('Failed to save about info.');
-      },
-    });
+    if (this.editingAboutId) {
+      // If editing, update the document
+      this.firebaseService.updateDocument('about', this.editingAboutId, aboutData).subscribe({
+        next: () => {
+          alert('About info updated successfully!');
+          this.resetForm();
+          this.getAboutData();
+        },
+        error: (err) => {
+          console.error('Error updating about info:', err);
+          alert('Failed to update about info.');
+        },
+      });
+    } else {
+      // If not editing, add new document
+      this.firebaseService.addDocument('about', aboutData).subscribe({
+        next: () => {
+          alert('About info saved successfully!');
+          this.resetForm();
+          this.getAboutData();
+        },
+        error: (err) => {
+          console.error('Error saving about info:', err);
+          alert('Failed to save about info.');
+        },
+      });
+    }
   }
-  deleteAboutData(id: string): void {
-  if (confirm('Are you sure you want to delete this about info?')) {
-    this.firebaseService.deleteDocument('about', id).subscribe({
-      next: () => {
-        alert('About info deleted successfully.');
-        this.getAboutData(); // Refresh list after deletion
-      },
-      error: (error) => {
-        console.error('Error deleting about info:', error);
-        alert('Failed to delete about info.');
-      }
-    });
-  }
-}
 
+  // Reset form after submission
+  resetForm(): void {
+    this.aboutForm.reset();
+    this.imagePreview = null;
+    this.base64Image = null;
+    this.selectedFile = null;
+    this.editingAboutId = null; // Clear the editing ID
+  }
+
+  // Method to populate the form for editing
+  editAboutData(id: string): void {
+    const aboutData = this.aboutDataList.find((data) => data.id === id);
+
+    if (aboutData) {
+      this.aboutForm.patchValue({
+        title: aboutData.title,
+        description: aboutData.description,
+        facebook: aboutData.facebook,
+        instagram: aboutData.instagram,
+        github: aboutData.github,
+        linkedin: aboutData.linkedin,
+        fiverr: aboutData.fiverr,
+        address: aboutData.address,
+        email: aboutData.email,
+        phoneNumber: aboutData.phoneNumber,
+      });
+      this.imagePreview = aboutData.photoUrl;
+      this.base64Image = aboutData.photoUrl; // Assume photoUrl is already base64 encoded
+      this.editingAboutId = id; // Set the ID of the about info being edited
+    }
+  }
+
+  // Method to delete the about data
+  deleteAboutData(id: string): void {
+    if (confirm('Are you sure you want to delete this about info?')) {
+      this.firebaseService.deleteDocument('about', id).subscribe({
+        next: () => {
+          alert('About info deleted successfully.');
+          this.getAboutData(); // Refresh list after deletion
+        },
+        error: (error) => {
+          console.error('Error deleting about info:', error);
+          alert('Failed to delete about info.');
+        }
+      });
+    }
+  }
 }
