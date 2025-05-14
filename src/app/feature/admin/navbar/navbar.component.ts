@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,6 +21,7 @@ import { MatBadgeModule } from '@angular/material/badge';
   templateUrl: './navbar.component.html',
 })
 export class NavbarComponent implements OnInit {
+    @Input() MenuOpen: boolean = true; // <-- This toggles sidebar width
   @Output() toggle = new EventEmitter<void>();
 
   dashboardTitle = 'Dashboard';

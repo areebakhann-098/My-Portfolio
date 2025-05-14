@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -9,12 +9,15 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent {
-  MenuOpen = true;  // Set default state to open
+    @Input() MenuOpen: boolean = true; // <-- Add this line
+
   userLogo = 'assets/images/logo1.jpg';  // Path to logo image
   userImage = 'assets/images/selfi.jpeg';  // Path to user profile image
   userName = 'Areeba';
   
   sideBarOpation = [
+        { label: 'dashboard', route: '/admin/dasboard', icon: 'show_chart' },
+
     { label: 'Profile', route: '/admin/profile', icon: 'person' },
     { label: 'Hero Section', route: '/admin/hero', icon: 'home' },
     { label: 'About', route: '/admin/about', icon: 'info' },
@@ -25,8 +28,5 @@ export class SidebarComponent {
     { label: 'Services', route: '/admin/services', icon: 'miscellaneous_services' },
   ];
 
-  // Toggle sidebar visibility
-  menuToggle() {
-    this.MenuOpen = !this.MenuOpen;
-  }
+ 
 }

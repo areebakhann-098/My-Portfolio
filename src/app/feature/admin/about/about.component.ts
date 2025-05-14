@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FirebaseService } from '../Firebase/firebase-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-about',
@@ -26,6 +27,8 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
   templateUrl: './about.component.html',
 })
 export class AboutComponent implements OnInit {
+  selectedTabIndex = 0; // Default to first tab
+
   aboutDataList: any[] = [];
   imagePreview: string | ArrayBuffer | null = null;
   base64Image: string | null = null;
@@ -46,7 +49,7 @@ export class AboutComponent implements OnInit {
     phoneNumber: new FormControl(''),
   });
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
   ngOnInit(): void {
     this.getAboutData();
@@ -140,27 +143,34 @@ export class AboutComponent implements OnInit {
   }
 
   // Method to populate the form for editing
-  editAboutData(id: string): void {
-    const aboutData = this.aboutDataList.find((data) => data.id === id);
+ 
 
-    if (aboutData) {
-      this.aboutForm.patchValue({
-        title: aboutData.title,
-        description: aboutData.description,
-        facebook: aboutData.facebook,
-        instagram: aboutData.instagram,
-        github: aboutData.github,
-        linkedin: aboutData.linkedin,
-        fiverr: aboutData.fiverr,
-        address: aboutData.address,
-        email: aboutData.email,
-        phoneNumber: aboutData.phoneNumber,
-      });
-      this.imagePreview = aboutData.photoUrl;
-      this.base64Image = aboutData.photoUrl; // Assume photoUrl is already base64 encoded
-      this.editingAboutId = id; // Set the ID of the about info being edited
-    }
+   
+  editAboutData(id: string): void {
+  const aboutData = this.aboutDataList.find((data) => data.id === id);
+
+  if (aboutData) {
+    this.aboutForm.patchValue({
+      title: aboutData.title,
+      description: aboutData.description,
+      facebook: aboutData.facebook,
+      instagram: aboutData.instagram,
+      github: aboutData.github,
+      linkedin: aboutData.linkedin,
+      fiverr: aboutData.fiverr,
+      address: aboutData.address,
+      email: aboutData.email,
+      phoneNumber: aboutData.phoneNumber,
+    });
+
+    this.imagePreview = aboutData.photoUrl;
+    this.base64Image = aboutData.photoUrl;
+    this.editingAboutId = id;
+
+    this.selectedTabIndex = 0; // Switch to "Add About Info" tab
   }
+}
+
 
   // Method to delete the about data
   deleteAboutData(id: string): void {

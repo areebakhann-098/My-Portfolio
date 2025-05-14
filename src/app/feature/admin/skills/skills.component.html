@@ -1,7 +1,7 @@
 <section class="p-8 bg-gray-50 min-h-screen">
   <h1 class="text-4xl font-bold text-center mb-6">Skills Section</h1>
 
-  <mat-tab-group>
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
     <!-- Add Skills Info Tab -->
     <mat-tab label="Add Skills Info">
       <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl mx-auto mt-6 space-y-6">
@@ -63,10 +63,9 @@
       <div *ngIf="skillsDataList.length === 0" class="mt-6 text-center text-gray-500">
         No skills added yet...
       </div>
-
-      <div *ngFor="let skill of skillsDataList" class="max-w-2xl mx-auto mt-6">
-        <div class="bg-white rounded-xl shadow-md p-4 space-y-2">
-          <img *ngIf="skill.image" [src]="skill.image" class="w-full h-48 object-cover rounded" />
+<div *ngFor="let skill of skillsDataList" class="flex justify-center mt-6">
+  <div class="w-full max-w-md bg-white rounded-xl shadow-md p-4 space-y-2">
+          <img *ngIf="skill.image" [src]="skill.image"  class="w-15 h-15 object-contain mb-2" />
           <p class="text-lg font-semibold"><strong>Image Title:</strong> {{ skill.imageTitle }}</p>
 
           <div class="flex gap-3 mt-4">

@@ -1,23 +1,10 @@
-/* Ensure the body doesn't overflow and content is properly visible */
-.flex {
-  display: flex;
-}
+@media (max-width: 768px) {
+  .flex-1 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 
-.min-h-screen {
-  min-height: 100vh;
+  .w-full {
+    width: 100%;
+  }
 }
-
-.bg-gray-100 {
-  background-color: #f7fafc;
-}
-
-.flex-1 {
-  flex-grow: 1
-}
-
-/* Make sure content doesn’t get pushed out of view */
-.some-class {
-  margin-left: 16rem
-}
-
-/* Add other styles if necessary */

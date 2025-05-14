@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FirebaseService } from '../Firebase/firebase-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-skills',
@@ -25,16 +26,19 @@ export class SkillsComponent implements OnInit {
     imageTitle: new FormControl('', Validators.required),
     image: new FormControl<File | null>(null),
   });
+    @Input() MenuOpen: boolean = true;
 
   previewImage: string | ArrayBuffer | null = null;
   selectedImage: File | null = null;
   skillsDataList: any[] = [];
   isSubmitting = false;
+  selectedTabIndex=0;
+
 
   isEditMode = false;
   selectedSkillId: string | null = null;
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchSkills();
@@ -61,7 +65,7 @@ export class SkillsComponent implements OnInit {
     }
   }
 
-  async submitSkillsForm(): Promise<void> {
+  submitSkillsForm(): void {
     if (this.skillsForm.invalid || (!this.selectedImage && !this.previewImage)) {
       alert('Please fill all fields and select an image.');
       return;
@@ -117,6 +121,7 @@ export class SkillsComponent implements OnInit {
       image: null // Reset image file input
     });
     this.previewImage = skill.image;
+    this.selectedTabIndex=0;
   }
 
   deleteSkill(skillId: string): void {

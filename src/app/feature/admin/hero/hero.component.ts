@@ -26,7 +26,6 @@ import { FirebaseService } from '../Firebase/firebase-service.service';
   templateUrl: './hero.component.html',
 })
 export class HeroComponent {
-
   editMode = false;
 editingHeroId: string | null = null;
 selectedTabIndex = 0; // 0 = Form Tab, 1 = Data List Tab

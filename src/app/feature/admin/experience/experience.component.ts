@@ -8,6 +8,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FirebaseService } from '../Firebase/firebase-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-experience',
@@ -40,8 +41,10 @@ export class ExperienceComponent implements OnInit {
   isSubmitting = false;
   isEditMode = false;
   selectedExperienceId: string | null = null;
+    selectedTabIndex = 0; // Default to first tab
 
-  constructor(private firebaseService: FirebaseService) {}
+
+  constructor(private firebaseService: FirebaseService, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchExperienceData();
@@ -116,6 +119,8 @@ export class ExperienceComponent implements OnInit {
       badgeClass: experience.badgeClass,
       image: experience.image
     });
+        this.selectedTabIndex = 0; // Switch to "Add About Info" tab
+
   }
 
   deleteExperience(id: string): void {

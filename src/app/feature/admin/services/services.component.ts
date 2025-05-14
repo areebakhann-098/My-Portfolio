@@ -25,7 +25,7 @@ export class ServicesComponent {
     title: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
   });
-
+selectedTabIndex=0;
   servicesList: any[] = [];
   isEditMode = false;
   currentEditId: string | null = null;
@@ -106,6 +106,7 @@ export class ServicesComponent {
     });
     this.isEditMode = true;
     this.currentEditId = service.id;
+    this.selectedTabIndex=0
   }
 
   // Cancel editing

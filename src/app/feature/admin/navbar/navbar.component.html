@@ -1,47 +1,60 @@
-<header class="bg-white w-full shadow-md px-6 py-4 flex items-center justify-between">
-  <h1 class="text-2xl font-semibold">{{ dashboardTitle }}</h1>
 
 
+ 
+<header
+  class="bg-white w-full shadow-md px-4 py-3 flex flex-wrap items-center justify-between"
 
-
-  <div class="flex items-center gap-6">
-      <!-- notification icon with dynamic badge -->
-<mat-icon
-  [matBadge]="contactCount"
-  matBadgeColor="warn"
-  matBadgeOverlap="false"
-  [matMenuTriggerFor]="contactMenu"
-  style="cursor: pointer;"
-  aria-hidden="false"
 >
-  notifications
-</mat-icon>
-
-
-<!-- dropdown menu showing latest contacts -->
-<mat-menu #contactMenu="matMenu">
-  <button mat-menu-item *ngFor="let contact of contacts.slice(0, 3)" (click)="viewSingleContact(contact)">
-  <mat-icon>person</mat-icon>
-  <span>{{ contact.fullName }}</span>
-</button>
-
-   
-    <button mat-menu-item (click)="goToContactPage()">
-      <mat-icon>mail</mat-icon>
-      <span>View All Messages</span>
+  <!-- Left: Title and Sidebar Toggle -->
+  <div class="flex items-center gap-4">
+    <!-- Toggle Button (Mobile/Desktop) -->
+    <button (click)="onToggleClick()">
+      <mat-icon>menu</mat-icon>
     </button>
-  <ng-template #noContacts>
-    <button mat-menu-item disabled>No new contacts</button>
-  </ng-template>
-</mat-menu>
-    <span class="text-gray-700 font-medium">{{ userName }}</span>
+
+    <!-- Dashboard Title -->
+    <h1 class="text-xl md:text-2xl font-semibold">{{ dashboardTitle }}</h1>
+  </div>
+
+  <!-- Right: Actions (Responsive layout) --> 
+  <div class="flex items-center gap-4 flex-wrap">
+    <!-- Notification icon with dynamic badge -->
+    <mat-icon
+      [matBadge]="contactCount"
+      matBadgeColor="warn"
+      matBadgeOverlap="false"
+      [matMenuTriggerFor]="contactMenu"
+      class="cursor-pointer"
+      aria-hidden="false"
+    >
+      notifications
+    </mat-icon>
+
+    <!-- Contacts dropdown -->
+    <mat-menu #contactMenu="matMenu">
+      <button mat-menu-item *ngFor="let contact of contacts.slice(0, 3)" (click)="viewSingleContact(contact)">
+        <mat-icon>person</mat-icon>
+        <span>{{ contact.fullName }}</span>
+      </button>
+      <button mat-menu-item (click)="goToContactPage()">
+        <mat-icon>mail</mat-icon>
+        <span>View All Messages</span>
+      </button>
+      <ng-template #noContacts>
+        <button mat-menu-item disabled>No new contacts</button>
+      </ng-template>
+    </mat-menu>
+
+    <!-- Username (hidden on very small screens) -->
+    <span class="hidden sm:inline-block text-gray-700 font-medium">{{ userName }}</span>
+
+    <!-- Avatar and user menu -->
     <button mat-button [matMenuTriggerFor]="userMenu" class="flex items-center gap-2">
-      <img [src]="userAvatar" alt="User Logo" class="rounded-full w-10 h-10" />
+      <img [src]="userAvatar" alt="User Logo" class="rounded-full w-8 h-8" />
       <mat-icon>arrow_drop_down</mat-icon>
     </button>
-  
 
-
+    <!-- User dropdown menu -->
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item (click)="profile()">
         <mat-icon>person</mat-icon>

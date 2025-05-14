@@ -1,0 +1,6 @@
+<!-- admin-layout.component.html -->
+   
+<app-sidebar [MenuOpen]="MenuOpen"></app-sidebar>
+<app-navbar [MenuOpen]="MenuOpen" (toggle)="toggleSidebar()"></app-navbar>
+ <router-outlet />
+
