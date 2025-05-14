@@ -16,6 +16,7 @@ Chart.register(...registerables);
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
   selectedSection: string | null = null;
+  cols= 3;
 
   sections = [
     { key: 'skills', title: 'Skills', icon: 'code', color: '#FCE4EC', count: 0 },
