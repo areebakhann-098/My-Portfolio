@@ -16,7 +16,7 @@ export class SidebarComponent {
   userName = 'Areeba';
   
   sideBarOpation = [
-        { label: 'dashboard', route: '/admin/dasboard', icon: 'show_chart' },
+        { label: 'dashboard', route: '/admin/dasboard', icon: 'home' },
 
     { label: 'Profile', route: '/admin/profile', icon: 'person' },
     { label: 'Hero Section', route: '/admin/hero', icon: 'home' },
