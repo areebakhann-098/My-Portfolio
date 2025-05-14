@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../../../admin/Firebase/firebase-service.service';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-services',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.css']
 })

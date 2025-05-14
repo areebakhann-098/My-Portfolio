@@ -18,3 +18,50 @@ aside .w-64 {
 aside .w-20 {
   width: 5rem;  /* When MenuOpen is false */
 }
+.active-link {
+  background-color: rgba(247, 247, 247, 0.856); /* or any other highlight style */
+  border-radius: 8px;
+color: black;
+}
+/* Apply to the entire <a> tag */
+a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: auto;
+  padding: 8px;
+  transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+/* When the sidebar is collapsed, set width to icon size */
+.sidebar.collapsed a {
+  width: 40px;  /* Icon size */
+}
+
+/* When sidebar is open */
+.sidebar.w-64 a {
+  width: 160px; /* Adjust according to your design */
+}
+
+/* Icon hover effect */
+a:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* or any other background */
+  border-radius: 8px;
+}
+
+/* Only show label when the sidebar is open */
+a .material-icons {
+  transition: transform 0.3s ease;
+}
+
+a:hover .material-icons {
+  transform: scale(1.1);
+}
+
+a:hover span {
+  display: block;  /* or use transition to animate */
+}
+
+.group:hover .material-icons {
+  color: #fff;  /* Or any hover effect you want on the icon */
+}

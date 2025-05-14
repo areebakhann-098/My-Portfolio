@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
@@ -16,8 +16,7 @@ export class SidebarComponent {
   userName = 'Areeba';
   
   sideBarOpation = [
-        { label: 'dashboard', route: '/admin/dasboard', icon: 'home' },
-
+        { label: 'dashboard', route: '/admin/dasboard', icon: 'show_chart' },
     { label: 'Profile', route: '/admin/profile', icon: 'person' },
     { label: 'Hero Section', route: '/admin/hero', icon: 'home' },
     { label: 'About', route: '/admin/about', icon: 'info' },

@@ -11,18 +11,21 @@
     </div>
 
     <div id="sidebarMenu" class="mt-10">
-      <ul class="flex flex-col gap-y-6">
-        <li *ngFor="let option of sideBarOpation" class="flex items-center gap-2">
-          <i class="material-icons">{{ option.icon }}</i>
+      <ul class="flex flex-col ml-1 gap-y-6">
+      <li *ngFor="let option of sideBarOpation">
+  <a 
+    [routerLink]="option.route"
+    routerLinkActive="active-link" 
+    [routerLinkActiveOptions]="{ exact: true }"
+    class="flex items-center gap-2">
+    <i class="material-icons">{{ option.icon }}</i>
+    <span *ngIf="MenuOpen">{{ option.label }}</span>
+  </a>
+</li>
 
-          <!-- Show label only if the sidebar is open -->
-          <a *ngIf="MenuOpen" [routerLink]="option.route">
-            {{ option.label }}
-          </a>
 
-          <!-- If the sidebar is collapsed, only show icon -->
-          <a *ngIf="!MenuOpen" [routerLink]="option.route"></a>
-        </li>
+
+        
       </ul>
     </div>
   </div>
